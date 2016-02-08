@@ -3,7 +3,7 @@ engines:
     enabled: true
     checks:
       Rubocop/Metrics/LineLength:
-	enabled: true
+        enabled: true
         max: 99
       Rubocop/Style/TrailingWhitespace:
         enabled: false
