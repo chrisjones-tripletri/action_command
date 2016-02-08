@@ -2,15 +2,7 @@ sudo: false
 cache: bundler
 language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1
-  - 2.2
   - 2.3.0
-  - ruby-head
-  - jruby-19mode
-  - jruby-9.0.1.0
-  - rbx-3
 env:
   # this doesn't do anything for MRI or RBX, but it doesn't hurt them either
   # for JRuby, it enables us to get more accurate coverage data
