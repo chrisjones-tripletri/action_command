@@ -2,9 +2,10 @@ require 'action_command'
 
 class HelloWorldCommand < ActionCommand::Executable
   attr_accessor :name
+  DESCRIPTION = 'Say hello to someone'.freeze
   
   def self.describe_io
-    return ActionCommand.describe_io(self, 'Say hello to someone') do |io|
+    return ActionCommand.describe_io(self, DESCRIPTION) do |io|
       io.input(:name, 'Name of person to say hello to')
     end
   end

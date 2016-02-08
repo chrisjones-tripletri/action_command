@@ -37,6 +37,20 @@ module ActionCommand
     result = create_result
     return ActionCommand.create_and_execute(cls, params, CONTEXT_TEST, result)
   end
+  
+  # Execute a command at the root level of a rake task context.
+  def self.execute_rake(cls, args = {})
+    io = cls.describe_io
+    if io.help? args
+      io.show_help
+      return
+    end
+  
+    return unless io.validate(args)
+    
+    result = create_result
+    return ActionCommand.create_and_execute(cls, args, CONTEXT_RAKE, result)
+  end    
 
   # Create a global description of the inputs and outputs of a command.  Should
   # usually be called within an ActionCommand::Executable subclass in its 
@@ -56,8 +70,8 @@ module ActionCommand
   def self.create_and_execute(cls, params, parent, result)
     raise ArgumentError, 'Expected params to be a Hash' unless params.is_a? Hash
     
-    unless cls.ancestors.include? ActionCommand::Executable 
-      raise ArgumentError, "Expected an ActionCommand::Executable not #{cls.name}"
+    unless cls.is_a?(Class) && cls.ancestors.include?(ActionCommand::Executable)
+      raise ArgumentError, 'Expected an ActionCommand::Executable as class'
     end
     
     params[:parent] = parent
@@ -128,7 +142,7 @@ module ActionCommand
 
       # universal parameters.
       input(:help, 'Help on this command', OPTIONAL)
-      input(:rspec, 
+      input(:test, 
             'Optional rspec context for performing validations via rspec_validate', 
             OPTIONAL)
       input(:parent, 'Reference to the parent of this command, a symbol at the root', OPTIONAL)
@@ -180,7 +194,7 @@ module ActionCommand
 
     # displays the help for this command
     def show_help
-      puts "#{@action.name}: #{@desc}"
+      puts "#{@action.name}: #{description}"
       @params.each do |p|
         puts "    #{p[:symbol]}: #{p[:desc]}"
       end
