@@ -3,11 +3,12 @@ engines:
     enabled: true
     checks:
       Rubocop/Metrics/LineLength:
-        Max: 99
+	enabled: true
+        max: 99
       Rubocop/Style/TrailingWhitespace:
-        Enabled: false
+        enabled: false
       Rubocop/Style/RedundantReturn:
-        Enabled: false
+        enabled: false
 
   golint:
     enabled: true
