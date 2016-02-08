@@ -1,0 +1,8 @@
+Metrics/LineLength:
+  Max: 99
+
+Style/TrailingWhitespace:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false

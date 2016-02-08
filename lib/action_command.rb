@@ -1,4 +1,4 @@
-require "action_command/version"
+require 'action_command/version'
 
 # To use action command, create subclasses of ActionCommand::Executable
 # and run them using the ActionCommand.execute_... variants.
@@ -8,15 +8,15 @@ module ActionCommand
   
   # Used as root parent of command if we are in a rake task
   CONTEXT_RAKE  = :rake
-  
-  @@logger = nil
-  @@params = {}
+
+  @@logger = nil # rubocop:disable Style/ClassVars
+  @@params = {}  # rubocop:disable Style/ClassVars
   
 
   # Set a logger to be used when creating commands.  
   # @param logger Any object that implements .error and .info
-  def self.set_logger(logger)
-    @@logger = logger
+  def self.logger=(logger)
+    @@logger = logger # rubocop:disable Style/ClassVars
   end
   
   # @return a new, valid, empty result.
@@ -44,7 +44,7 @@ module ActionCommand
   def self.describe_io(cmd_cls, desc)
     name = cmd_cls.name
     params = @@params[name]
-    if(!params)
+    unless params
       params = InputOutput.new(cmd_cls, desc)
       @@params[name] = params
       yield params
@@ -54,13 +54,12 @@ module ActionCommand
 
   # Used internally, not for general purpose use.
   def self.create_and_execute(cls, params, parent, result)
-    if(!params.is_a? Hash)
-      raise ArgumentError.new("Expected params to be a Hash")
+    raise ArgumentError, 'Expected params to be a Hash' unless params.is_a? Hash
+    
+    unless cls.ancestors.include? ActionCommand::Executable 
+      raise ArgumentError, "Expected an ActionCommand::Executable not #{cls.name}"
     end
     
-    if(!cls.ancestors.include?(ActionCommand::Executable))
-      raise ArgumentError.new("Expected an ActionCommand::Executable not #{cls.name}")
-    end
     params[:parent] = parent
     action = cls.new(params)
     return action.execute(result)
@@ -101,20 +100,14 @@ module ActionCommand
 
     # display an informational message to the logger, if there is one.
     def info(msg)
-      if(@logger)
-        @logger.info(msg)
-      else
-        puts msg
-      end
+      @logger.info(msg) if @logger
     end
     
     protected
     
     # display an error message to the logger, if there is one.
     def error(msg)
-      if(@logger)
-        @logger.error(msg)
-      end
+      @logger.error(msg) if @logger
     end
     
   end
@@ -124,7 +117,7 @@ module ActionCommand
   # If you don't want to specify your input and output, you can just access the hash
   # you passed into the command as @params
   class InputOutput
-    OPTIONAL = { optional: true }
+    OPTIONAL = { optional: true }.freeze
   
     # Do not use this.  Instead, implment self.describe_io in your command subclass, and
     # call the method {ActionCommand#describe_io} from within it, returning its result.
@@ -135,7 +128,9 @@ module ActionCommand
 
       # universal parameters.
       input(:help, 'Help on this command', OPTIONAL)
-      input(:rspec, 'Optional rspec context for performing validations via rspec_validate', OPTIONAL)
+      input(:rspec, 
+            'Optional rspec context for performing validations via rspec_validate', 
+            OPTIONAL)
       input(:parent, 'Reference to the parent of this command, a symbol at the root', OPTIONAL)
     end
 
@@ -144,11 +139,13 @@ module ActionCommand
     def validate(args)
       @params.each do |p|
         val = args[p[:symbol]]
-        if(!val || val == '*' || val == '')
-          opts = p[:opts]
-          if(!opts[:optional])
-            raise ArgumentError.new("You must specify the required input #{p[:symbol]}")
-          end
+        
+        # if the argument has a value, no need to test whether it is optional.
+        next unless !val || val == '*' || val == ''
+        
+        opts = p[:opts]
+        unless opts[:optional]
+          raise ArgumentError, "You must specify the required input #{p[:symbol]}"
         end
       end
       return true
@@ -158,10 +155,10 @@ module ActionCommand
     # with the same name.
     def assign_args(dest, args)
       # handle aliasing
-      if(validate(args))
+      if validate(args)
         @params.each do |param|
           sym = param[:symbol]
-          if(args.has_key?(sym))
+          if args.key? sym
             sym_assign = "#{sym}=".to_sym
             dest.send(sym_assign, args[sym])      
           end
@@ -175,7 +172,7 @@ module ActionCommand
     end
 
     
-    def is_help?(args)
+    def help?(args)
       first_arg_sym = @params.first[:symbol]
       first_arg_val = args[first_arg_sym]
       return first_arg_val == 'help'
@@ -191,15 +188,16 @@ module ActionCommand
 
     # Defines input for a command
     # @sym [Symbol] symbol identifying the parameter
-    # @desc [String] description for use by internal developers, or on a rake task with rake your_task_name[help]
+    # @desc [String] description for use by internal developers, or on a rake task with 
+    #   rake your_task_name[help]
     # @opts Optional arguments.
     def input(sym, desc, opts = {})
-      @params.insert(0, { symbol: sym, desc: desc, opts: opts })
+      @params.insert(0, symbol: sym, desc: desc, opts: opts)
     end
 
     # @return an array with the set of parameter symbols this command accepts.
     def keys 
-      @params.collect { |p| p[:symbol]}
+      @params.collect { |p| p[:symbol] }
     end
   end
   
@@ -228,11 +226,10 @@ module ActionCommand
     
     # Call this within a commands execution if you'd like to perform validations
     # within the testing context.  
-    # @yield [context] Yields back the testing context that you passed in to {ActionCommand#execute_test}.
+    # @yield [context] Yields back the testing context that you 
+    #   passed in to {ActionCommand#execute_test}.
     def testing
-      if(@test)
-        yield @test
-      end
+      yield @test if @test
     end    
     
     protected
