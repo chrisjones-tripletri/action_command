@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/chrisjones-tripletri/action_command.svg?branch=master)](https://travis-ci.org/chrisjones-tripletri/action_command)
+[![Test Coverage](https://codeclimate.com/github/chrisjones-tripletri/action_command/badges/coverage.svg)](https://codeclimate.com/github/chrisjones-tripletri/action_command/coverage)
 [![Code Climate](https://codeclimate.com/github/chrisjones-tripletri/action_command/badges/gpa.svg)](https://codeclimate.com/github/chrisjones-tripletri/action_command)
 
 # ActionCommand
