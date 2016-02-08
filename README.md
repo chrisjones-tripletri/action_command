@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/chrisjones-tripletri/action_command/badges/gpa.svg)](https://codeclimate.com/github/chrisjones-tripletri/action_command)
+
 # ActionCommand
 
 This gem is currently in an experimentation phase, and should not be used by others.
