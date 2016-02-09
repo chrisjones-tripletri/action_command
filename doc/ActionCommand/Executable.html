@@ -116,27 +116,22 @@ ActionCommand.execute_… to execute one.</p>
 
 
 
-
-
-
-  
-    <h2>
-      Class Method Summary
-      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
-    </h2>
-
-    <ul class="summary">
-      
-        <li class="public ">
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
   <span class="summary_signature">
     
-      <a href="#describe_io-class_method" title="describe_io (class method)">+ (Object) <strong>describe_io</strong>(cmd_cls, desc) </a>
+      <a href="#parent-instance_method" title="#parent (instance method)">- (Object) <strong>parent</strong> </a>
     
 
     
   </span>
   
   
+  
+    
+    
   
   
   
@@ -145,13 +140,44 @@ ActionCommand.execute_… to execute one.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Create a global description of the inputs and outputs of a command.</p>
+<p>Returns the value of attribute parent.</p>
 </div></span>
   
 </li>
 
-      
-    </ul>
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#test-instance_method" title="#test (instance method)">- (Object) <strong>test</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute test.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
   
     <h2>
       Instance Method Summary
@@ -211,7 +237,7 @@ ActionCommand.execute_… to execute one.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Executable) <strong>initialize</strong>(params) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Executable) <strong>initialize</strong>(args) </a>
     
 
     
@@ -228,7 +254,7 @@ ActionCommand.execute_… to execute one.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Executable.</p>
+<p>Do not call new directly, instead use ActionCommand#execute_…</p>
 </div></span>
   
 </li>
@@ -268,7 +294,7 @@ validations within the testing context.</p>
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="ActionCommand::Executable (class)">Executable</a></span></tt>) <strong>initialize</strong>(params) 
+    - (<tt><span class='object_link'><a href="" title="ActionCommand::Executable (class)">Executable</a></span></tt>) <strong>initialize</strong>(args) 
   
 
   
@@ -277,7 +303,7 @@ validations within the testing context.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Executable</p>
+<p>Do not call new directly, instead use ActionCommand#execute_… variants.</p>
 
 
   </div>
@@ -291,17 +317,15 @@ validations within the testing context.</p>
       <pre class="lines">
 
 
-201
-202
-203
-204</pre>
+242
+243
+244</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 201</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 242</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
-  <span class='comment'># temporary, for initial testing
-</span>  <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span><span class='period'>.</span><span class='id identifier rubyid_assign_args'>assign_args</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -310,15 +334,15 @@ validations within the testing context.</p>
   
 </div>
 
-
-  <div id="class_method_details" class="method_details_list">
-    <h2>Class Method Details</h2>
-
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
     
+      
+      <span id="parent=-instance_method"></span>
       <div class="method_details first">
-  <h3 class="signature first" id="describe_io-class_method">
+  <h3 class="signature first" id="parent-instance_method">
   
-    + (<tt>Object</tt>) <strong>describe_io</strong>(cmd_cls, desc) 
+    - (<tt>Object</tt>) <strong>parent</strong> 
   
 
   
@@ -327,7 +351,7 @@ validations within the testing context.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Create a global description of the inputs and outputs of a command</p>
+<p>Returns the value of attribute parent</p>
 
 
   </div>
@@ -341,29 +365,58 @@ validations within the testing context.</p>
       <pre class="lines">
 
 
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234</pre>
+239
+240
+241</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 225</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 239</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd_cls'>cmd_cls</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_cmd_cls'>cmd_cls</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
-  <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='cvar'>@@params</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
-  <span class='kw'>if</span><span class='lparen'>(</span><span class='op'>!</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='const'>InputOutput</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_action'>action</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='rparen'>)</span>
-    <span class='cvar'>@@params</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span>
-    <span class='kw'>yield</span> <span class='id identifier rubyid_params'>params</span>
-  <span class='kw'>end</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_params'>params</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_parent'>parent</span>
+  <span class='ivar'>@parent</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="test=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="test-instance_method">
+  
+    - (<tt>Object</tt>) <strong>test</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute test</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+239
+240
+241</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 239</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_test'>test</span>
+  <span class='ivar'>@test</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -371,6 +424,7 @@ validations within the testing context.</p>
 </div>
     
   </div>
+
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
@@ -417,15 +471,17 @@ Command implementors should override execute_internal.</p>
       <pre class="lines">
 
 
-211
-212
-213</pre>
+251
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 211</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 251</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_result'>result</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -455,7 +511,7 @@ Command implementors should override execute_internal.</p>
   
     <li>
       
-        <span class='name'>a</span>
+        <span class='name'>result</span>
       
       
         <span class='type'>(<tt><span class='object_link'><a href="Result.html" title="ActionCommand::Result (class)">ActionCommand::Result</a></span></tt>)</span>
@@ -464,7 +520,7 @@ Command implementors should override execute_internal.</p>
       
         &mdash;
         <div class='inline'>
-<p>result object where you can store  the results of your logic, or indicate
+<p>a result object where you can store  the results of your logic, or indicate
 that the command failed.</p>
 </div>
       
@@ -479,12 +535,12 @@ that the command failed.</p>
       <pre class="lines">
 
 
-243
-244
-245</pre>
+270
+271
+272</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 243</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 270</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
   
@@ -526,7 +582,7 @@ validations within the testing context.</p>
       
         &mdash;
         <div class='inline'>
-<p>Yields back the testing context that you passed in to
+<p>Yields back the testing context that you  passed in to
 ActionCommand#execute_test.</p>
 </div>
       
@@ -540,19 +596,15 @@ ActionCommand#execute_test.</p>
       <pre class="lines">
 
 
-218
-219
-220
-221
-222</pre>
+260
+261
+262</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 218</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 260</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_testing'>testing</span>
-  <span class='kw'>if</span><span class='lparen'>(</span><span class='ivar'>@test</span><span class='rparen'>)</span>
-    <span class='kw'>yield</span> <span class='ivar'>@test</span>
-  <span class='kw'>end</span>
+  <span class='kw'>yield</span> <span class='ivar'>@test</span> <span class='kw'>if</span> <span class='ivar'>@test</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -564,7 +616,7 @@ ActionCommand#execute_test.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Feb  8 10:41:23 2016 by
+  Generated on Tue Feb  9 09:56:19 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

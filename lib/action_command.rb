@@ -4,15 +4,19 @@ require 'action_command/version'
 # and run them using the ActionCommand.execute_... variants.
 module ActionCommand
   # Used as root parent of command if we are in a testing context.  
-  CONTEXT_TEST  = :test
+  CONTEXT_TEST = :test
   
   # Used as root parent of command if we are in a rake task
-  CONTEXT_RAKE  = :rake
+  CONTEXT_RAKE = :rake
+
+  # Used as root parent of command if we are executing it from rails (a controller, etc)
+  CONTEXT_RAILS = :rails
 
   @@logger = nil # rubocop:disable Style/ClassVars
   @@params = {}  # rubocop:disable Style/ClassVars
   
-
+  GUARD_TEST = 'this is wrong'.freeze
+  
   # Set a logger to be used when creating commands.  
   # @param logger Any object that implements .error and .info
   def self.logger=(logger)
@@ -39,6 +43,9 @@ module ActionCommand
   end
   
   # Execute a command at the root level of a rake task context.
+  # @param cls [ActionCommand::Executable] The class of an Executable subclass
+  # @param args [Hash] parameters used by the command.
+  # @return [ActionCommand::Result]
   def self.execute_rake(cls, args = {})
     io = cls.describe_io
     if io.help? args
@@ -51,6 +58,16 @@ module ActionCommand
     result = create_result
     return ActionCommand.create_and_execute(cls, args, CONTEXT_RAKE, result)
   end    
+
+  # Execute a command at the root level of a rails context
+  # @param cls [ActionCommand::Executable] The class of an Executable subclass
+  # @param params [Hash] parameters used by the command.
+  # @return [ActionCommand::Result]
+  def self.execute_rails(cls, params = {})
+    result = create_result
+    return ActionCommand.create_and_execute(cls, params, CONTEXT_RAILS, result)
+  end
+  
 
   # Create a global description of the inputs and outputs of a command.  Should
   # usually be called within an ActionCommand::Executable subclass in its 
@@ -91,7 +108,7 @@ module ActionCommand
     
     # Call this if your command implementation fails.  Sets
     # ok? to false on the result.
-    # @param [String] message describing the failure.
+    # @param msg [String] message describing the failure.
     def failed(msg)
       @ok = false
       error(msg)
@@ -134,7 +151,7 @@ module ActionCommand
     OPTIONAL = { optional: true }.freeze
   
     # Do not use this.  Instead, implment self.describe_io in your command subclass, and
-    # call the method {ActionCommand#describe_io} from within it, returning its result.
+    # call the method ActionCommand#self.describe_io from within it, returning its result.
     def initialize(action, desc)
       @action = action
       @desc = desc
@@ -149,7 +166,7 @@ module ActionCommand
     end
 
     # Validates that the specified parameters are valid for this input description.
-    # @args [Hash] the arguments to validate
+    # @param args [Hash] the arguments to validate
     def validate(args)
       @params.each do |p|
         val = args[p[:symbol]]
@@ -201,10 +218,10 @@ module ActionCommand
     end
 
     # Defines input for a command
-    # @sym [Symbol] symbol identifying the parameter
-    # @desc [String] description for use by internal developers, or on a rake task with 
+    # @param sym [Symbol] symbol identifying the parameter
+    # @param desc [String] description for use by internal developers, or on a rake task with 
     #   rake your_task_name[help]
-    # @opts Optional arguments.
+    # @param opts Optional arguments.
     def input(sym, desc, opts = {})
       @params.insert(0, symbol: sym, desc: desc, opts: opts)
     end
@@ -223,7 +240,7 @@ module ActionCommand
     
     attr_accessor :parent, :test
     
-    # Do not call new directly, instead use {ActionCommand#execute_...} variants.
+    # Do not call new directly, instead use ActionCommand#execute_... variants.
     def initialize(args)
       self.class.describe_io.assign_args(self, args)
     end
@@ -241,7 +258,7 @@ module ActionCommand
     # Call this within a commands execution if you'd like to perform validations
     # within the testing context.  
     # @yield [context] Yields back the testing context that you 
-    #   passed in to {ActionCommand#execute_test}.
+    #   passed in to ActionCommand#execute_test.
     def testing
       yield @test if @test
     end    
@@ -250,7 +267,7 @@ module ActionCommand
       
     # @!visibility public
     # Override this method to implement the logic of your command
-    # @param [ActionCommand::Result] a result object where you can store 
+    # @param result [ActionCommand::Result] a result object where you can store 
     #   the results of your logic, or indicate that the command failed.
     def execute_internal(result)
       

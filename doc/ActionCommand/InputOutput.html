@@ -121,7 +121,7 @@ can just access the hash you passed into the command as @params</p>
         <dt id="OPTIONAL-constant" class="">OPTIONAL =
           
         </dt>
-        <dd><pre class="code"><span class='lbrace'>{</span> <span class='label'>optional:</span> <span class='kw'>true</span> <span class='rbrace'>}</span></pre></dd>
+        <dd><pre class="code"><span class='lbrace'>{</span> <span class='label'>optional:</span> <span class='kw'>true</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
     </dl>
   
@@ -192,6 +192,28 @@ accessor with the same name.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#help%3F-instance_method" title="#help? (instance method)">- (Boolean) <strong>help?</strong>(args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#initialize-instance_method" title="#initialize (instance method)">- (InputOutput) <strong>initialize</strong>(action, desc) </a>
     
 
@@ -218,7 +240,7 @@ accessor with the same name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#is_help%3F-instance_method" title="#is_help? (instance method)">- (Boolean) <strong>is_help?</strong>(args) </a>
+      <a href="#input-instance_method" title="#input (instance method)">- (Object) <strong>input</strong>(sym, desc, opts = {}) </a>
     
 
     
@@ -232,7 +254,9 @@ accessor with the same name.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Defines input for a command.</p>
+</div></span>
   
 </li>
 
@@ -255,31 +279,7 @@ accessor with the same name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>—————————————————————————-.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#param-instance_method" title="#param (instance method)">- (Object) <strong>param</strong>(sym, desc, opts = {}) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>defines a parameter for a command.</p>
+<p>An array with the set of parameter symbols this command accepts.</p>
 </div></span>
   
 </li>
@@ -353,8 +353,8 @@ description.</p>
   <div class="discussion">
     
 <p>Do not use this.  Instead, implment self.describe_io in your command
-subclass, and call the method ActionCommand#describe_io from within it,
-returning its result.</p>
+subclass, and call the method ActionCommand#self.describe_io from within
+it, returning its result.</p>
 
 
   </div>
@@ -368,19 +368,21 @@ returning its result.</p>
       <pre class="lines">
 
 
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126</pre>
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_action'>action</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='rparen'>)</span>
   <span class='ivar'>@action</span> <span class='op'>=</span> <span class='id identifier rubyid_action'>action</span>
@@ -388,9 +390,11 @@ returning its result.</p>
   <span class='ivar'>@params</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 
   <span class='comment'># universal parameters.
-</span>  <span class='id identifier rubyid_param'>param</span><span class='lparen'>(</span><span class='symbol'>:help</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Help on this command</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_param'>param</span><span class='lparen'>(</span><span class='symbol'>:rspec</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Optional rspec context for performing validations via rspec_validate</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_param'>param</span><span class='lparen'>(</span><span class='symbol'>:parent</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Reference to the parent of this command, a symbol at the root</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
+</span>  <span class='id identifier rubyid_input'>input</span><span class='lparen'>(</span><span class='symbol'>:help</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Help on this command</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_input'>input</span><span class='lparen'>(</span><span class='symbol'>:test</span><span class='comma'>,</span> 
+        <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Optional rspec context for performing validations via rspec_validate</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> 
+        <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_input'>input</span><span class='lparen'>(</span><span class='symbol'>:parent</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Reference to the parent of this command, a symbol at the root</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='const'>OPTIONAL</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -431,32 +435,28 @@ accessor with the same name.</p>
       <pre class="lines">
 
 
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159</pre>
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 146</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 185</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_assign_args'>assign_args</span><span class='lparen'>(</span><span class='id identifier rubyid_dest'>dest</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='comment'># handle aliasing
-</span>  <span class='id identifier rubyid_args'>args</span> <span class='op'>=</span> <span class='id identifier rubyid_preprocess_args'>preprocess_args</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
-
-  <span class='kw'>if</span><span class='lparen'>(</span><span class='id identifier rubyid_validate'>validate</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span><span class='rparen'>)</span>
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_validate'>validate</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
     <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_param'>param</span><span class='op'>|</span>
       <span class='id identifier rubyid_sym'>sym</span> <span class='op'>=</span> <span class='id identifier rubyid_param'>param</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span>
-      <span class='kw'>if</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span> <span class='id identifier rubyid_sym'>sym</span>
         <span class='id identifier rubyid_sym_assign'>sym_assign</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_sym'>sym</span><span class='embexpr_end'>}</span><span class='tstring_content'>=</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
         <span class='id identifier rubyid_dest'>dest</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_sym_assign'>sym_assign</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='id identifier rubyid_sym'>sym</span><span class='rbracket'>]</span><span class='rparen'>)</span>      
       <span class='kw'>end</span>
@@ -494,12 +494,12 @@ accessor with the same name.</p>
       <pre class="lines">
 
 
-162
-163
-164</pre>
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 199</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_description'>description</span>
   <span class='ivar'>@desc</span>
@@ -510,9 +510,9 @@ accessor with the same name.</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="is_help?-instance_method">
+  <h3 class="signature " id="help?-instance_method">
   
-    - (<tt>Boolean</tt>) <strong>is_help?</strong>(args) 
+    - (<tt>Boolean</tt>) <strong>help?</strong>(args) 
   
 
   
@@ -546,19 +546,115 @@ accessor with the same name.</p>
       <pre class="lines">
 
 
-167
-168
-169
-170
-171</pre>
+204
+205
+206
+207
+208</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 204</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_is_help?'>is_help?</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_help?'>help?</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_first_arg_sym'>first_arg_sym</span> <span class='op'>=</span> <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_first_arg_val'>first_arg_val</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='id identifier rubyid_first_arg_sym'>first_arg_sym</span><span class='rbracket'>]</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_first_arg_val'>first_arg_val</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>help</span><span class='tstring_end'>&#39;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="input-instance_method">
+  
+    - (<tt>Object</tt>) <strong>input</strong>(sym, desc, opts = {}) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Defines input for a command</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>sym</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>symbol identifying the parameter</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>desc</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>description for use by internal developers, or on a rake task with  rake <a
+href="help">your_task_name</a></p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'></span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Optional arguments.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+223
+224
+225</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 223</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_input'>input</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span> <span class='label'>symbol:</span> <span class='id identifier rubyid_sym'>sym</span><span class='comma'>,</span> <span class='label'>desc:</span> <span class='id identifier rubyid_desc'>desc</span><span class='comma'>,</span> <span class='label'>opts:</span> <span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -576,13 +672,32 @@ accessor with the same name.</p>
   
 </h3><div class="docstring">
   <div class="discussion">
-    <hr>
+    
+<p>Returns an array with the set of parameter symbols this command accepts.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>an array with the set of parameter symbols this command accepts.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -590,56 +705,15 @@ accessor with the same name.</p>
       <pre class="lines">
 
 
-190
-191
-192</pre>
+228
+229
+230</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 190</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 228</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_keys'>keys</span> 
-  <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_collect'>collect</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span><span class='rbrace'>}</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="param-instance_method">
-  
-    - (<tt>Object</tt>) <strong>param</strong>(sym, desc, opts = {}) 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>defines a parameter for a command</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-185
-186
-187</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 185</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_param'>param</span><span class='lparen'>(</span><span class='id identifier rubyid_sym'>sym</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_insert'>insert</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span> <span class='lbrace'>{</span> <span class='label'>symbol:</span> <span class='id identifier rubyid_sym'>sym</span><span class='comma'>,</span> <span class='label'>desc:</span> <span class='id identifier rubyid_desc'>desc</span><span class='comma'>,</span> <span class='label'>opts:</span> <span class='id identifier rubyid_opts'>opts</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_collect'>collect</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -672,18 +746,18 @@ accessor with the same name.</p>
       <pre class="lines">
 
 
-174
-175
-176
-177
-178
-179</pre>
+211
+212
+213
+214
+215
+216</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 174</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 211</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_show_help'>show_help</span>
-  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='ivar'>@action</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='ivar'>@desc</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='ivar'>@action</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_description'>description</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
     <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>    </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:desc</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
@@ -712,7 +786,27 @@ description.</p>
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>args</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the arguments to validate</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -720,32 +814,34 @@ description.</p>
       <pre class="lines">
 
 
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142</pre>
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 130</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 168</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate'>validate</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='ivar'>@params</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
     <span class='id identifier rubyid_val'>val</span> <span class='op'>=</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
-    <span class='kw'>if</span><span class='lparen'>(</span><span class='op'>!</span><span class='id identifier rubyid_val'>val</span> <span class='op'>||</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*</span><span class='tstring_end'>&#39;</span></span> <span class='op'>||</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:opts</span><span class='rbracket'>]</span>
-      <span class='kw'>if</span><span class='lparen'>(</span><span class='op'>!</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:optional</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ERROR: * cannot be used for required param </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>return</span> <span class='kw'>false</span>
-      <span class='kw'>end</span>
+    
+    <span class='comment'># if the argument has a value, no need to test whether it is optional.
+</span>    <span class='kw'>next</span> <span class='kw'>unless</span> <span class='op'>!</span><span class='id identifier rubyid_val'>val</span> <span class='op'>||</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*</span><span class='tstring_end'>&#39;</span></span> <span class='op'>||</span> <span class='id identifier rubyid_val'>val</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+    
+    <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:opts</span><span class='rbracket'>]</span>
+    <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:optional</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must specify the required input </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='kw'>return</span> <span class='kw'>true</span>
@@ -760,7 +856,7 @@ description.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Feb  8 10:41:23 2016 by
+  Generated on Tue Feb  9 09:56:19 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>
