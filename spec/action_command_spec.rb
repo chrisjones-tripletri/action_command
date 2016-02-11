@@ -51,7 +51,6 @@ describe ActionCommand do
 
   it 'handles reversed arguments' do
     expect { ActionCommand.execute_test(InternalTestCommand, self) }.to raise_error(ArgumentError)
-    expect(1).to eq(2)
   end
     
   

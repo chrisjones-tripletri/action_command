@@ -14,9 +14,7 @@ module ActionCommand
 
   @@logger = nil # rubocop:disable Style/ClassVars
   @@params = {}  # rubocop:disable Style/ClassVars
-  
-  GUARD_TEST = 'this is wrong'.freeze
-  
+    
   # Set a logger to be used when creating commands.  
   # @param logger Any object that implements .error and .info
   def self.logger=(logger)
@@ -148,6 +146,7 @@ module ActionCommand
   # If you don't want to specify your input and output, you can just access the hash
   # you passed into the command as @params
   class InputOutput
+    # shorthand to indicate the parameter is optional.
     OPTIONAL = { optional: true }.freeze
   
     # Do not use this.  Instead, implment self.describe_io in your command subclass, and

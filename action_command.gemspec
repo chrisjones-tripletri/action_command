@@ -40,4 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'terminal-notifier'
   spec.add_development_dependency 'terminal-notifier-guard'
+  spec.add_development_dependency 'rake_command_filter'
 end
