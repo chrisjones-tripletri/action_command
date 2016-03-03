@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/action_command.rb</dd>
+    <dd class="r2 last">lib/action_command/result.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -168,6 +168,30 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Assign some kind of a return value for use by the caller.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#current-instance_method" title="#current (instance method)">- (Object) <strong>current</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>returns the current hash of values we are operating on.</p>
 </div></span>
   
 </li>
@@ -250,6 +274,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#key%3F-instance_method" title="#key? (instance method)">- (Boolean) <strong>key?</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>determine if a key exists in the result.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#ok%3F-instance_method" title="#ok? (instance method)">- (Boolean) <strong>ok?</strong> </a>
     
 
@@ -266,6 +314,54 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>True, up until failed has been called at least once.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pop-instance_method" title="#pop (instance method)">- (Object) <strong>pop</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>removes the current set of results from the stack.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#push-instance_method" title="#push (instance method)">- (Object) <strong>push</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>adds results under the subkey until pop is called.</p>
 </div></span>
   
 </li>
@@ -303,18 +399,18 @@
       <pre class="lines">
 
 
-101
-102
-103
-104
-105</pre>
+6
+7
+8
+9
+10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_logger'>logger</span><span class='rparen'>)</span>
   <span class='ivar'>@ok</span> <span class='op'>=</span> <span class='kw'>true</span>
-  <span class='ivar'>@values</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@values</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rbracket'>]</span>
   <span class='ivar'>@logger</span> <span class='op'>=</span> <span class='id identifier rubyid_logger'>logger</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -355,15 +451,15 @@
       <pre class="lines">
 
 
-126
-127
-128</pre>
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 59</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='ivar'>@values</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -396,15 +492,56 @@
       <pre class="lines">
 
 
-121
-122
-123</pre>
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 49</span>
 
 <span class='kw'>def</span> <span class='op'>[]=</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
-  <span class='ivar'>@values</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span>
+  <span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="current-instance_method">
+  
+    - (<tt>Object</tt>) <strong>current</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>returns the current hash of values we are operating on.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 44</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_current'>current</span>
+  <span class='kw'>return</span> <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -458,13 +595,13 @@ result.</p>
       <pre class="lines">
 
 
-110
-111
-112
-113</pre>
+15
+16
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 15</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_failed'>failed</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
   <span class='ivar'>@ok</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -501,15 +638,69 @@ result.</p>
       <pre class="lines">
 
 
-131
-132
-133</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 131</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 64</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
   <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="key?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>key?</strong>(key) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>determine if a key exists in the result.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+54
+55
+56</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 54</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_current'>current</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -560,15 +751,113 @@ result.</p>
       <pre class="lines">
 
 
-116
-117
-118</pre>
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ok?'>ok?</span>
   <span class='kw'>return</span> <span class='ivar'>@ok</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pop-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pop</strong>(key) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>removes the current set of results from the stack.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+38
+39
+40
+41</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 38</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pop'>pop</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_key'>key</span>
+  <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="push-instance_method">
+  
+    - (<tt>Object</tt>) <strong>push</strong>(key) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>adds results under the subkey until pop is called</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 26</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_key'>key</span>
+  <span class='id identifier rubyid_old_cur'>old_cur</span> <span class='op'>=</span> <span class='id identifier rubyid_current'>current</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_old_cur'>old_cur</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+    <span class='ivar'>@values</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_old_cur'>old_cur</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
+  <span class='kw'>else</span>
+    <span class='ivar'>@values</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='id identifier rubyid_old_cur'>old_cur</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -580,7 +869,7 @@ result.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Feb 11 09:57:22 2016 by
+  Generated on Thu Mar  3 16:34:07 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

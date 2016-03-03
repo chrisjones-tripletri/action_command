@@ -96,7 +96,106 @@ by others.</p>
 
 <h2 id="label-Usage">Usage</h2>
 
-<p>TODO: Write usage instructions here</p>
+<p><code>action_command</code> is designed to help you centralize logic which
+might otherwise end up in a controller or model, and easily invoke it from
+a controller, a test, or a rake command. I read placing logic in
+&#39;actions&#39; rather than models in the book <a
+href="http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222196">Rails
+4 Test Prescriptions</a> and liked it.</p>
+
+<h3 id="label-HelloWorld">HelloWorld</h3>
+
+<p>You can declare an action with inputs and outputs</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>class</span> <span class='const'>HelloWorldCommand</span> <span class='op'>&lt;</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>Executable</span>
+
+  <span class='comment'># You need to declare an attr_accessor for each named parameter
+</span>  <span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:name</span>
+
+  <span class='comment'># You can optional describe the input and output of the command,
+</span>  <span class='comment'># the text is used to provide help if you create a rake version of the command.
+</span>  <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span>
+    <span class='comment'># the text in here is only
+</span>    <span class='kw'>return</span> <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Say hello to someone</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_io'>io</span><span class='op'>|</span>
+      <span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='id identifier rubyid_input'>input</span><span class='lparen'>(</span><span class='symbol'>:name</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Name of person to say hello to</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='id identifier rubyid_output'>output</span><span class='lparen'>(</span><span class='symbol'>:greeting</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Greeting for the person</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  
+  <span class='id identifier rubyid_protected'>protected</span>
+
+  <span class='comment'># Override the execute internal method to provide logic for your action, and
+</span>  <span class='comment'># assign results to the result.   You can also use methods like result.fail or 
+</span>  <span class='comment'># result.info.
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='symbol'>:greeting</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hello </span><span class='embexpr_beg'>#{</span><span class='ivar'>@name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_no_output'>no_output</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<h4 id="label-HelloWorld-3A+Execute+from+Rails">HelloWorld: Execute from Rails</h4>
+
+<p>You can execute it from rails:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_execute_rails'>execute_rails</span><span class='lparen'>(</span><span class='const'>HelloWorldCommand</span><span class='comma'>,</span> <span class='lbrace'>{</span> <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Chris</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='rparen'>)</span>
+</code></pre>
+
+<h4 id="label-HelloWorld-3A+Execute+from+Rake">HelloWorld: Execute from Rake</h4>
+
+<p>When building a system, I find it useful to be able to easily run my
+actions from the command-line as well. In rails, you can create a
+lib/tasks/my_rake.task, and configure your actions as task with one line:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_namespace'>namespace</span> <span class='symbol'>:my_namespace</span> <span class='kw'>do</span>
+
+  <span class='comment'># use [:initialize] as the last parameter if you want to do things that require
+</span>  <span class='comment'># rails startup in your command, like connecting to your database.
+</span>  <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_install_rake'>install_rake</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='symbol'>:hello_world</span><span class='comma'>,</span> <span class='const'>HelloWorldCommand</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  
+<span class='kw'>end</span>
+</code></pre>
+
+<p>You can always invoke your rake task with [help] to see help on the input
+and output of the action.</p>
+
+<h4 id="label-HelloWorld-3A+Execute+from+rspec-2Fetc">HelloWorld: Execute from rspec/etc</h4>
+
+<p>Or, you can execute it from a testing framework.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_it'>it</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>says hello world</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_execute_test'>execute_test</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='const'>HelloWorldCommand</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Chris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_be_ok'>be_ok</span>
+    <span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='symbol'>:greeting</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_eq'>eq</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Hello Chris</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+</code></pre>
+
+<p>If your command does a lot, you might like to do some internal
+verifications during the testing process to aid debugging. Inside a
+command&#39;s execute_internal method, you can use a block like this</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
+    <span class='comment'># ... do some logic
+</span>    
+    <span class='comment'># t is the parameter you passed as the first argument to execute_test.  
+</span>    <span class='comment'># so, if you are using rspec, this code block will only be executed when you are 
+</span>    <span class='comment'># running in a testing context.
+</span>    <span class='id identifier rubyid_testing'>testing</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_t'>t</span><span class='op'>|</span>
+      <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_expect'>expect</span><span class='lparen'>(</span><span class='id identifier rubyid_my_val'>my_val</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_eq'>eq</span><span class='lparen'>(</span><span class='int'>10</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    
+  <span class='kw'>end</span>
+
+<span class='comment'>### Child Actions
+</span>
+<span class='const'>Actions</span> <span class='id identifier rubyid_can'>can</span> <span class='id identifier rubyid_execute'>execute</span> <span class='id identifier rubyid_their'>their</span> <span class='id identifier rubyid_own'>own</span> <span class='id identifier rubyid_child'>child</span> <span class='id identifier rubyid_actions'>actions</span><span class='period'>.</span>  <span class='const'>Within</span> <span class='id identifier rubyid_an'>an</span> <span class='id identifier rubyid_action'>action</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>s execute_internal method
+</span></span></code></pre>
+
+<p>ruby  def execute_internal  @names.each_with_index do |name, i|  # the i
+parameter will cause the result of the child command to be nested  # in the
+result under that value. For example, here I would expect  # <a
+href="i">result</a>[:greeting] to contain the greeting for each subcommand
+after  # execution.  ActionCommand.execute_child(self, HelloWorldCommand,
+result, i, name: name)  end  end “`</p>
 
 <h2 id="label-Development">Development</h2>
 
@@ -128,7 +227,7 @@ href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Thu Feb 11 09:57:21 2016 by
+  Generated on Thu Mar  3 16:34:07 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

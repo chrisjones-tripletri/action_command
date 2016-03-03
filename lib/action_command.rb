@@ -1,8 +1,14 @@
 require 'action_command/version'
+require 'action_command/result'
+require 'action_command/input_output'
+require 'action_command/executable'
+require 'action_command/utils'
 
 # To use action command, create subclasses of ActionCommand::Executable
 # and run them using the ActionCommand.execute_... variants.
 module ActionCommand
+  # 5. Begin adding documentation for how to use it.
+  
   # Used as root parent of command if we are in a testing context.  
   CONTEXT_TEST = :test
   
@@ -11,6 +17,9 @@ module ActionCommand
 
   # Used as root parent of command if we are executing it from rails (a controller, etc)
   CONTEXT_RAILS = :rails
+  
+  # Used to create an optional parameter in describe_io
+  OPTIONAL = { optional: true }.freeze
 
   @@logger = nil # rubocop:disable Style/ClassVars
   @@params = {}  # rubocop:disable Style/ClassVars
@@ -42,19 +51,27 @@ module ActionCommand
   
   # Execute a command at the root level of a rake task context.
   # @param cls [ActionCommand::Executable] The class of an Executable subclass
-  # @param args [Hash] parameters used by the command.
+  # @param args parameters used by the command.
   # @return [ActionCommand::Result]
-  def self.execute_rake(cls, args = {})
+  def self.execute_rake(cls, args)
     io = cls.describe_io
     if io.help? args
       io.show_help
       return
     end
-  
-    return unless io.validate(args)
     
     result = create_result
-    return ActionCommand.create_and_execute(cls, args, CONTEXT_RAKE, result)
+    ActionCommand.create_and_execute(cls, io.rake_input(args), CONTEXT_RAKE, result)
+    io.print_output(result)
+    return result
+  end    
+  
+  # Install a command as a rake task in a 
+  def self.install_rake(rake, sym, cls, deps)
+    rake.send(:desc, cls.describe_io.desc)
+    rake.send(:task, sym, cls.describe_io.keys => deps) do |_t, args|
+      ActionCommand.execute_rake(cls, args)
+    end
   end    
 
   # Execute a command at the root level of a rails context
@@ -66,6 +83,19 @@ module ActionCommand
     return ActionCommand.create_and_execute(cls, params, CONTEXT_RAILS, result)
   end
   
+  # Execute a child command, placing its results under the specified subkey
+  # @param parent [ActionCommand::Executable] An instance of the parent command
+  # @param cls [ActionCommand::Executable] The class of an Executable subclass
+  # @param result [ActionCommand::Result] The result to populate
+  # @param result_key [Symbo] a key to place the results under, or nil if you want
+  #   the result stored directly on the current results object.
+  # @param params [Hash] parameters used by the command.
+  # @return [ActionCommand::Result]
+  def self.execute_child(parent, cls, result, result_key, params = {})
+    result.push(result_key)
+    ActionCommand.create_and_execute(cls, params, parent, result)
+    result.pop(result_key)
+  end
 
   # Create a global description of the inputs and outputs of a command.  Should
   # usually be called within an ActionCommand::Executable subclass in its 
@@ -93,185 +123,4 @@ module ActionCommand
     action = cls.new(params)
     return action.execute(result)
   end
-  
-  # The result of one or more commands being executed.
-  class Result
-  
-    # By default, a command is ok?
-    def initialize(logger)
-      @ok = true
-      @values = {}
-      @logger = logger
-    end
-    
-    # Call this if your command implementation fails.  Sets
-    # ok? to false on the result.
-    # @param msg [String] message describing the failure.
-    def failed(msg)
-      @ok = false
-      error(msg)
-    end
-    
-    # @return [Boolean] true, up until failed has been called at least once.
-    def ok?
-      return @ok
-    end
-
-    # Assign some kind of a return value for use by the caller.
-    def []=(key, val)
-      @values[key] = val
-    end
-  
-    # Return a value return by the command
-    def [](key)
-      return @values[key]
-    end
-
-    # display an informational message to the logger, if there is one.
-    def info(msg)
-      @logger.info(msg) if @logger
-    end
-    
-    protected
-    
-    # display an error message to the logger, if there is one.
-    def error(msg)
-      @logger.error(msg) if @logger
-    end
-    
-  end
-
-  # A static description of the input and output from a given command.  Although
-  # adding this adds a bunch of documentation and validation, it is not required.
-  # If you don't want to specify your input and output, you can just access the hash
-  # you passed into the command as @params
-  class InputOutput
-    # shorthand to indicate the parameter is optional.
-    OPTIONAL = { optional: true }.freeze
-  
-    # Do not use this.  Instead, implment self.describe_io in your command subclass, and
-    # call the method ActionCommand#self.describe_io from within it, returning its result.
-    def initialize(action, desc)
-      @action = action
-      @desc = desc
-      @params = []
-
-      # universal parameters.
-      input(:help, 'Help on this command', OPTIONAL)
-      input(:test, 
-            'Optional rspec context for performing validations via rspec_validate', 
-            OPTIONAL)
-      input(:parent, 'Reference to the parent of this command, a symbol at the root', OPTIONAL)
-    end
-
-    # Validates that the specified parameters are valid for this input description.
-    # @param args [Hash] the arguments to validate
-    def validate(args)
-      @params.each do |p|
-        val = args[p[:symbol]]
-        
-        # if the argument has a value, no need to test whether it is optional.
-        next unless !val || val == '*' || val == ''
-        
-        opts = p[:opts]
-        unless opts[:optional]
-          raise ArgumentError, "You must specify the required input #{p[:symbol]}"
-        end
-      end
-      return true
-    end
-
-    # Goes through, and assigns the value for each declared parameter to an accessor
-    # with the same name.
-    def assign_args(dest, args)
-      # handle aliasing
-      if validate(args)
-        @params.each do |param|
-          sym = param[:symbol]
-          if args.key? sym
-            sym_assign = "#{sym}=".to_sym
-            dest.send(sym_assign, args[sym])      
-          end
-        end
-      end
-    end
-
-    # Returns the description for this command.
-    def description
-      @desc
-    end
-
-    
-    def help?(args)
-      first_arg_sym = @params.first[:symbol]
-      first_arg_val = args[first_arg_sym]
-      return first_arg_val == 'help'
-    end
-
-    # displays the help for this command
-    def show_help
-      puts "#{@action.name}: #{description}"
-      @params.each do |p|
-        puts "    #{p[:symbol]}: #{p[:desc]}"
-      end
-    end
-
-    # Defines input for a command
-    # @param sym [Symbol] symbol identifying the parameter
-    # @param desc [String] description for use by internal developers, or on a rake task with 
-    #   rake your_task_name[help]
-    # @param opts Optional arguments.
-    def input(sym, desc, opts = {})
-      @params.insert(0, symbol: sym, desc: desc, opts: opts)
-    end
-
-    # @return an array with the set of parameter symbols this command accepts.
-    def keys 
-      @params.collect { |p| p[:symbol] }
-    end
-  end
-  
-        
-  # Root class for action commands that can be executed by this library.
-  # Override execute_internal to implement one, call one of the variants
-  # of ActionCommand.execute_... to execute one.
-  class Executable
-    
-    attr_accessor :parent, :test
-    
-    # Do not call new directly, instead use ActionCommand#execute_... variants.
-    def initialize(args)
-      self.class.describe_io.assign_args(self, args)
-    end
-    
-    # Execute the logic of a command.  Should not usually be called
-    # directly.   Command executors should call one of the ActionCommand.execute_...
-    # variants. Command implementors should override
-    # execute_internal.  
-    # @return [ActionCommand::Result]
-    def execute(result)
-      execute_internal(result)
-      return result
-    end
-    
-    # Call this within a commands execution if you'd like to perform validations
-    # within the testing context.  
-    # @yield [context] Yields back the testing context that you 
-    #   passed in to ActionCommand#execute_test.
-    def testing
-      yield @test if @test
-    end    
-    
-    protected
-      
-    # @!visibility public
-    # Override this method to implement the logic of your command
-    # @param result [ActionCommand::Result] a result object where you can store 
-    #   the results of your logic, or indicate that the command failed.
-    def execute_internal(result)
-      
-    end
-    
-  end
-  
 end

@@ -42,7 +42,7 @@ GEM
     notiffany (0.0.8)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    parser (2.3.0.4)
+    parser (2.3.0.5)
       ast (~> 2.2)
     powerpack (0.1.1)
     pry (0.10.3)
@@ -51,7 +51,7 @@ GEM
       slop (~> 3.4)
     rainbow (2.1.0)
     rake (10.5.0)
-    rake_command_filter (0.1.0)
+    rake_command_filter (0.1.2)
       colorize
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)

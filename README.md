@@ -25,7 +25,112 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+`action_command` is designed to help you centralize logic which might otherwise end up in a controller or model, and easily invoke it from a controller, a test,
+or a rake command.  I read placing logic in 'actions' rather than models in the book [Rails 4 Test Prescriptions](http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222196)
+and liked it.
+
+### HelloWorld
+
+You can declare an action with inputs and outputs
+
+```ruby
+class HelloWorldCommand < ActionCommand::Executable
+
+  # You need to declare an attr_accessor for each named parameter
+  attr_accessor :name
+
+  # You can optional describe the input and output of the command,
+  # the text is used to provide help if you create a rake version of the command.
+  def self.describe_io
+    # the text in here is only
+    return ActionCommand.describe_io(self, 'Say hello to someone') do |io|
+      io.input(:name, 'Name of person to say hello to')
+      io.output(:greeting, 'Greeting for the person')
+    end
+  end
+  
+  protected
+
+  # Override the execute internal method to provide logic for your action, and
+  # assign results to the result.   You can also use methods like result.fail or 
+  # result.info.
+  def execute_internal(result)
+    result[:greeting] = "Hello #{@name}" unless no_output
+  end
+end
+```
+
+#### HelloWorld: Execute from Rails
+
+You can execute it from rails:
+
+```ruby
+  result = ActionCommand.execute_rails(HelloWorldCommand, { name: 'Chris' })
+```
+
+#### HelloWorld: Execute from Rake
+
+When building a system, I find it useful to be able to easily run my actions from 
+the command-line as well.  In rails, you can create a lib/tasks/my_rake.task, and
+configure your actions as task with one line:
+
+```
+namespace :my_namespace do
+
+  # use [:initialize] as the last parameter if you want to do things that require
+  # rails startup in your command, like connecting to your database.
+  ActionCommand.install_rake(self, :hello_world, HelloWorldCommand, [])
+  
+end
+```
+
+You can always invoke your rake task with [help] to see help on the input and output
+of the action.
+
+#### HelloWorld: Execute from rspec/etc
+
+Or, you can execute it from a testing framework.  
+
+```ruby
+  it 'says hello world' do
+    result = ActionCommand.execute_test(self, HelloWorldCommand, name: 'Chris')
+    expect(result).to be_ok
+    expect(result[:greeting]).to eq('Hello Chris')
+  end
+```
+
+If your command does a lot, you might like to do some internal verifications during the testing process to aid
+debugging.   Inside a command's execute_internal method, you can use a block like this
+
+```ruby
+  def execute_internal(result)
+    # ... do some logic
+    
+    # t is the parameter you passed as the first argument to execute_test.  
+    # so, if you are using rspec, this code block will only be executed when you are 
+    # running in a testing context.
+    testing do |t|
+      t.expect(my_val).to t.eq(10)
+    end
+    
+  end
+
+### Child Actions
+
+Actions can execute their own child actions.  Within an action's execute_internal method
+you should call additional actions via:
+
+```ruby
+  def execute_internal
+    @names.each_with_index do |name, i|
+      # the i parameter will cause the result of the child command to be nested
+      # in the result under that value.  For example, here I would expect
+      # result[i][:greeting] to contain the greeting for each subcommand after
+      # execution.
+      ActionCommand.execute_child(self, HelloWorldCommand, result, i, name: name)
+    end
+  end
+```
 
 ## Development
 
