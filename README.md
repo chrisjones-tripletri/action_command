@@ -26,8 +26,8 @@ Or install it yourself as:
 ## Usage
 
 `action_command` is designed to help you centralize logic which might otherwise end up in a controller or model, and easily invoke it from a controller, a test,
-or a rake command.  I read placing logic in 'actions' rather than models in the book [Rails 4 Test Prescriptions](http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222196)
-and liked it.
+or a rake command.  I encountered the idea in the book [Rails 4 Test Prescriptions](http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222196),
+tried it and liked it.
 
 ### HelloWorld
 
@@ -55,7 +55,7 @@ class HelloWorldCommand < ActionCommand::Executable
   # assign results to the result.   You can also use methods like result.fail or 
   # result.info.
   def execute_internal(result)
-    result[:greeting] = "Hello #{@name}" unless no_output
+    result[:greeting] = "Hello #{@name}"
   end
 end
 ```
@@ -85,7 +85,26 @@ end
 ```
 
 You can always invoke your rake task with [help] to see help on the input and output
-of the action.
+of the action.  Then `rake  my_namespace:hello_world[help]`
+
+will produce:
+
+```
+HelloWorldCommand: Say hello to someone
+  Input: 
+    name: Name of person to say hello to
+    no_output: If true, intentionally produces no output (optional)
+  Output: 
+    greeting: Greeting for the person
+```    
+
+and `rake my_namespace:hello_world[chris]`
+
+will produce:
+
+```
+greeting: Hello chris
+```
 
 #### HelloWorld: Execute from rspec/etc
 
@@ -100,7 +119,7 @@ Or, you can execute it from a testing framework.
 ```
 
 If your command does a lot, you might like to do some internal verifications during the testing process to aid
-debugging.   Inside a command's execute_internal method, you can use a block like this
+debugging.   Inside a command's execute_internal method, you can use a block like this:
 
 ```ruby
   def execute_internal(result)
@@ -114,6 +133,7 @@ debugging.   Inside a command's execute_internal method, you can use a block lik
     end
     
   end
+```
 
 ### Child Actions
 
