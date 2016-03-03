@@ -71,7 +71,7 @@ You can execute it from rails:
 #### HelloWorld: Execute from Rake
 
 When building a system, I find it useful to be able to easily run my actions from 
-the command-line as well.  In rails, you can create a lib/tasks/my_rake.task, and
+the command-line as well.  In rails, you can create a lib/tasks/my_task.rake, and
 configure your actions as task with one line:
 
 ```
@@ -85,7 +85,11 @@ end
 ```
 
 You can always invoke your rake task with [help] to see help on the input and output
-of the action.  Then `rake  my_namespace:hello_world[help]`
+of the action.  Then 
+
+```
+rake  my_namespace:hello_world[help]
+```
 
 will produce:
 
@@ -98,7 +102,11 @@ HelloWorldCommand: Say hello to someone
     greeting: Greeting for the person
 ```    
 
-and `rake my_namespace:hello_world[chris]`
+and 
+
+```
+rake my_namespace:hello_world[chris]
+```
 
 will produce:
 
