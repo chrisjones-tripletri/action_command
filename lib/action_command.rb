@@ -95,6 +95,7 @@ module ActionCommand
     result.push(result_key)
     ActionCommand.create_and_execute(cls, params, parent, result)
     result.pop(result_key)
+    return result
   end
 
   # Create a global description of the inputs and outputs of a command.  Should
@@ -107,6 +108,7 @@ module ActionCommand
       params = InputOutput.new(cmd_cls, desc)
       @@params[name] = params
       yield params
+      params.input(:help, 'Help for this command', OPTIONAL) if params.input_count == 0
     end
     return params
   end

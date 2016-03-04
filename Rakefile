@@ -4,7 +4,7 @@ require 'rubocop/rake_task'
 require 'yard'
 require 'rake_command_filter'
 
-load './spec/test_rake/helloworld.rake'
+load './spec/test_rake/tests.rake'
 
 RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new(:rubocop)

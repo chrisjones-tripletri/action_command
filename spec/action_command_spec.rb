@@ -6,6 +6,7 @@ require_relative './test_actions/hello_world_command'
 require_relative './test_actions/greet_group_command'
 require_relative './test_actions/failing_command'
 require_relative './test_actions/internal_test_command'
+require_relative './test_actions/no_parameters_command'
 
 describe ActionCommand do
   
@@ -102,6 +103,18 @@ describe ActionCommand do
     expect(stdout).to include('name: Name of')
     expect(stdout).to include('greeting: Greeting for')
     
+  end
+  
+  it 'handles a command with no parameters' do
+    stdout, _stderr, _stat = Open3.capture3('rake action_command:no_params')
+    expect(stdout).to include('test: test')
+  end
+
+  it 'help for a command with no parameters' do
+    stdout, _stderr, _stat = Open3.capture3('rake action_command:no_params[help]')
+    expect(stdout).to include('NoParametersCommand:')
+    expect(stdout).to include('help: Help for')
+    expect(stdout).to include('test: Test value')
   end
   
 end

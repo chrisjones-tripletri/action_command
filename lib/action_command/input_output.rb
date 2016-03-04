@@ -21,6 +21,11 @@ module ActionCommand
       # input(:help, 'Help on this command', OPTIONAL)
     end
     
+    # the number of input parameters for this command.
+    def input_count
+      return @input.length
+    end
+    
     # @param dest [ActionCommand::Executable] the executable in question
     # @return true if the executable is not in a testing context.
     def should_validate(dest)

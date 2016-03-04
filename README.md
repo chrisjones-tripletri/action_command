@@ -77,7 +77,7 @@ configure your actions as task with one line:
 ```
 namespace :my_namespace do
 
-  # use [:initialize] as the last parameter if you want to do things that require
+  # use [:environment] as the last parameter if you want to do things that require
   # rails startup in your command, like connecting to your database.
   ActionCommand.install_rake(self, :hello_world, HelloWorldCommand, [])
   
