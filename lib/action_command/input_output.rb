@@ -65,7 +65,7 @@ module ActionCommand
     
     # Goes through, and makes sure that required output parameters exist
     def process_output(dest, result)
-      return unless should_validate(dest)
+      return unless result.ok? && should_validate(dest)
 
       @output.each do |param|
         sym = param[:symbol]

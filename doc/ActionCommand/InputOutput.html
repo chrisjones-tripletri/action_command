@@ -989,7 +989,7 @@ missing</p>
       <pre class="code"><span class="info file"># File 'lib/action_command/input_output.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_process_output'>process_output</span><span class='lparen'>(</span><span class='id identifier rubyid_dest'>dest</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_should_validate'>should_validate</span><span class='lparen'>(</span><span class='id identifier rubyid_dest'>dest</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_ok?'>ok?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_should_validate'>should_validate</span><span class='lparen'>(</span><span class='id identifier rubyid_dest'>dest</span><span class='rparen'>)</span>
 
   <span class='ivar'>@output</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_param'>param</span><span class='op'>|</span>
     <span class='id identifier rubyid_sym'>sym</span> <span class='op'>=</span> <span class='id identifier rubyid_param'>param</span><span class='lbracket'>[</span><span class='symbol'>:symbol</span><span class='rbracket'>]</span>
@@ -1268,7 +1268,7 @@ description.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Mar  3 16:34:07 2016 by
+  Generated on Fri Mar  4 10:20:15 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

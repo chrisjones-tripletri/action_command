@@ -15,7 +15,6 @@ module ActionCommand
     # @return [Symbol] the symbol indicating what context this 
     # action was executed in, see the ActionCommand::CONTEXT_ constants.
     def root_context
-      
       context = parent
       context = context.parent until context.is_a? Symbol
       return context

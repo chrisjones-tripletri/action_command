@@ -594,12 +594,12 @@ validations within the testing context.</p>
       <pre class="lines">
 
 
+39
 40
-41
-42</pre>
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_child_context?'>child_context?</span>
   <span class='kw'>return</span> <span class='op'>!</span><span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Symbol</span><span class='rparen'>)</span>
@@ -650,14 +650,14 @@ Command implementors should override execute_internal.</p>
       <pre class="lines">
 
 
+48
 49
 50
 51
-52
-53</pre>
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 48</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
@@ -716,12 +716,12 @@ that the command failed.</p>
       <pre class="lines">
 
 
+69
 70
-71
-72</pre>
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 69</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
   
@@ -775,12 +775,12 @@ that the command failed.</p>
       <pre class="lines">
 
 
+29
 30
-31
-32</pre>
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 29</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rails_context?'>rails_context?</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_root_context'>root_context</span> <span class='op'>==</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>CONTEXT_RAILS</span>
@@ -834,12 +834,12 @@ that the command failed.</p>
       <pre class="lines">
 
 
+34
 35
-36
-37</pre>
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rake_context?'>rake_context?</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_root_context'>root_context</span> <span class='op'>==</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>CONTEXT_RAKE</span>
@@ -897,14 +897,12 @@ that the command failed.</p>
 18
 19
 20
-21
-22</pre>
+21</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_root_context'>root_context</span>
-  
   <span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='id identifier rubyid_parent'>parent</span>
   <span class='id identifier rubyid_context'>context</span> <span class='op'>=</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_parent'>parent</span> <span class='kw'>until</span> <span class='id identifier rubyid_context'>context</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Symbol</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_context'>context</span>
@@ -958,12 +956,12 @@ that the command failed.</p>
       <pre class="lines">
 
 
+24
 25
-26
-27</pre>
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_test_context?'>test_context?</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_root_context'>root_context</span> <span class='op'>==</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>CONTEXT_TEST</span>
@@ -1019,12 +1017,12 @@ ActionCommand#execute_test.</p>
       <pre class="lines">
 
 
+58
 59
-60
-61</pre>
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/executable.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_testing'>testing</span>
   <span class='kw'>yield</span> <span class='ivar'>@test</span> <span class='kw'>if</span> <span class='ivar'>@test</span>
@@ -1039,7 +1037,7 @@ ActionCommand#execute_test.</p>
 </div>
 
     <div id="footer">
-  Generated on Thu Mar  3 16:34:07 2016 by
+  Generated on Fri Mar  4 10:20:15 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

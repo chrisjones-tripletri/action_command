@@ -98,10 +98,10 @@ by others.</p>
 
 <p><code>action_command</code> is designed to help you centralize logic which
 might otherwise end up in a controller or model, and easily invoke it from
-a controller, a test, or a rake command. I read placing logic in
-&#39;actions&#39; rather than models in the book <a
+a controller, a test, or a rake command. I encountered the idea in the book
+<a
 href="http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222196">Rails
-4 Test Prescriptions</a> and liked it.</p>
+4 Test Prescriptions</a>, tried it and liked it.</p>
 
 <h3 id="label-HelloWorld">HelloWorld</h3>
 
@@ -128,7 +128,7 @@ href="http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222
 </span>  <span class='comment'># assign results to the result.   You can also use methods like result.fail or 
 </span>  <span class='comment'># result.info.
 </span>  <span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='symbol'>:greeting</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hello </span><span class='embexpr_beg'>#{</span><span class='ivar'>@name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_no_output'>no_output</span>
+    <span class='id identifier rubyid_result'>result</span><span class='lbracket'>[</span><span class='symbol'>:greeting</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Hello </span><span class='embexpr_beg'>#{</span><span class='ivar'>@name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
 <span class='kw'>end</span>
 </code></pre>
@@ -144,7 +144,7 @@ href="http://www.amazon.com/Rails-Test-Prescriptions-Healthy-Codebase/dp/1941222
 
 <p>When building a system, I find it useful to be able to easily run my
 actions from the command-line as well. In rails, you can create a
-lib/tasks/my_rake.task, and configure your actions as task with one line:</p>
+lib/tasks/my_task.rake, and configure your actions as task with one line:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_namespace'>namespace</span> <span class='symbol'>:my_namespace</span> <span class='kw'>do</span>
 
@@ -156,7 +156,28 @@ lib/tasks/my_rake.task, and configure your actions as task with one line:</p>
 </code></pre>
 
 <p>You can always invoke your rake task with [help] to see help on the input
-and output of the action.</p>
+and output of the action. Then</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_rake'>rake</span>  <span class='label'>my_namespace:</span><span class='id identifier rubyid_hello_world'>hello_world</span><span class='lbracket'>[</span><span class='id identifier rubyid_help'>help</span><span class='rbracket'>]</span>
+</code></pre>
+
+<p>will produce:</p>
+
+<pre class="code ruby"><code class="ruby">HelloWorldCommand: Say hello to someone
+  Input: 
+    name: Name of person to say hello to
+    no_output: If true, intentionally produces no output (optional)
+  Output: 
+    greeting: Greeting for the person</code></pre>
+
+<p>and</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_rake'>rake</span> <span class='label'>my_namespace:</span><span class='id identifier rubyid_hello_world'>hello_world</span><span class='lbracket'>[</span><span class='id identifier rubyid_chris'>chris</span><span class='rbracket'>]</span>
+</code></pre>
+
+<p>will produce:</p>
+
+<pre class="code ruby"><code class="ruby">greeting: Hello chris</code></pre>
 
 <h4 id="label-HelloWorld-3A+Execute+from+rspec-2Fetc">HelloWorld: Execute from rspec/etc</h4>
 
@@ -171,7 +192,7 @@ and output of the action.</p>
 
 <p>If your command does a lot, you might like to do some internal
 verifications during the testing process to aid debugging. Inside a
-command&#39;s execute_internal method, you can use a block like this</p>
+command&#39;s execute_internal method, you can use a block like this:</p>
 
 <pre class="code ruby"><code class="ruby"><span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
     <span class='comment'># ... do some logic
@@ -184,18 +205,23 @@ command&#39;s execute_internal method, you can use a block like this</p>
     <span class='kw'>end</span>
     
   <span class='kw'>end</span>
+</code></pre>
 
-<span class='comment'>### Child Actions
-</span>
-<span class='const'>Actions</span> <span class='id identifier rubyid_can'>can</span> <span class='id identifier rubyid_execute'>execute</span> <span class='id identifier rubyid_their'>their</span> <span class='id identifier rubyid_own'>own</span> <span class='id identifier rubyid_child'>child</span> <span class='id identifier rubyid_actions'>actions</span><span class='period'>.</span>  <span class='const'>Within</span> <span class='id identifier rubyid_an'>an</span> <span class='id identifier rubyid_action'>action</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>s execute_internal method
-</span></span></code></pre>
+<h3 id="label-Child+Actions">Child Actions</h3>
 
-<p>ruby  def execute_internal  @names.each_with_index do |name, i|  # the i
-parameter will cause the result of the child command to be nested  # in the
-result under that value. For example, here I would expect  # <a
-href="i">result</a>[:greeting] to contain the greeting for each subcommand
-after  # execution.  ActionCommand.execute_child(self, HelloWorldCommand,
-result, i, name: name)  end  end “`</p>
+<p>Actions can execute their own child actions. Within an action&#39;s
+execute_internal method you should call additional actions via:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span>
+    <span class='ivar'>@names</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+      <span class='comment'># the i parameter will cause the result of the child command to be nested
+</span>      <span class='comment'># in the result under that value.  For example, here I would expect
+</span>      <span class='comment'># result[i][:greeting] to contain the greeting for each subcommand after
+</span>      <span class='comment'># execution.
+</span>      <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_execute_child'>execute_child</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='const'>HelloWorldCommand</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+</code></pre>
 
 <h2 id="label-Development">Development</h2>
 
@@ -227,7 +253,7 @@ href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Thu Mar  3 16:34:07 2016 by
+  Generated on Fri Mar  4 10:20:14 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>
