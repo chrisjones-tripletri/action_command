@@ -114,6 +114,40 @@
 
 
 
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#result_code-instance_method" title="#result_code (instance method)">- (Integer) <strong>result_code</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The current result code.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
 
 
 
@@ -200,6 +234,54 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#debug-instance_method" title="#debug (instance method)">- (Object) <strong>debug</strong>(msg = nil) { ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>display an debugging message to the logger, if there is one.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#error-instance_method" title="#error (instance method)">- (Object) <strong>error</strong>(msg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>display an error message to the logger, if there is one.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#failed-instance_method" title="#failed (instance method)">- (Object) <strong>failed</strong>(msg) </a>
     
 
@@ -224,7 +306,31 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#info-instance_method" title="#info (instance method)">- (Object) <strong>info</strong>(msg) </a>
+      <a href="#failed_with_code-instance_method" title="#failed_with_code (instance method)">- (Object) <strong>failed_with_code</strong>(msg, result_code) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Call this if your command implementation fails.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#info-instance_method" title="#info (instance method)">- (Object) <strong>info</strong>(msg = nil) { ... }</a>
     
 
     
@@ -248,7 +354,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Result) <strong>initialize</strong>(logger) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Result) <strong>initialize</strong> </a>
     
 
     
@@ -290,6 +396,102 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>determine if a key exists in the result.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log_input-instance_method" title="#log_input (instance method)">- (Object) <strong>log_input</strong>(params) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Used internally to log the input parameters to a command.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log_output-instance_method" title="#log_output (instance method)">- (Object) <strong>log_output</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Used internally to log the output parameters for a command.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#logger%3D-instance_method" title="#logger= (instance method)">- (Object) <strong>logger=</strong>(logger) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>set the logger for this result.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#logging%3F-instance_method" title="#logging? (instance method)">- (Boolean) <strong>logging?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>True if logging is enabled.</p>
 </div></span>
   
 </li>
@@ -346,7 +548,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#push-instance_method" title="#push (instance method)">- (Object) <strong>push</strong>(key) </a>
+      <a href="#push-instance_method" title="#push (instance method)">- (Object) <strong>push</strong>(key, cmd) </a>
     
 
     
@@ -367,6 +569,54 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#root_command-instance_method" title="#root_command (instance method)">- (Object) <strong>root_command</strong>(cls) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Used internally to establish the class of the root command.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sequence-instance_method" title="#sequence (instance method)">- (Object) <strong>sequence</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>return the unique sequence id for the commands under this result.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -376,7 +626,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="ActionCommand::Result (class)">Result</a></span></tt>) <strong>initialize</strong>(logger) 
+    - (<tt><span class='object_link'><a href="" title="ActionCommand::Result (class)">Result</a></span></tt>) <strong>initialize</strong> 
   
 
   
@@ -399,19 +649,19 @@
       <pre class="lines">
 
 
-6
-7
 8
 9
-10</pre>
+10
+11
+12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 8</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_logger'>logger</span><span class='rparen'>)</span>
-  <span class='ivar'>@ok</span> <span class='op'>=</span> <span class='kw'>true</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
+  <span class='ivar'>@result_code</span> <span class='op'>=</span> <span class='const'>RESULT_CODE_OK</span>
   <span class='ivar'>@values</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rbracket'>]</span>
-  <span class='ivar'>@logger</span> <span class='op'>=</span> <span class='id identifier rubyid_logger'>logger</span>
+  <span class='ivar'>@logger</span> <span class='op'>=</span> <span class='kw'>nil</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -419,6 +669,72 @@
 </div>
   
 </div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="result_code-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>result_code</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the current result code</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current result code</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 73</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_result_code'>result_code</span>
+  <span class='ivar'>@result_code</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 
   <div id="instance_method_details" class="method_details_list">
@@ -451,12 +767,12 @@
       <pre class="lines">
 
 
-59
-60
-61</pre>
+116
+117
+118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
@@ -492,12 +808,12 @@
       <pre class="lines">
 
 
-49
-50
-51</pre>
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='op'>[]=</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_val'>val</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_val'>val</span>
@@ -533,15 +849,121 @@
       <pre class="lines">
 
 
-44
-45
-46</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 44</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 96</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_current'>current</span>
   <span class='kw'>return</span> <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="debug-instance_method">
+  
+    - (<tt>Object</tt>) <strong>debug</strong>(msg = nil) { ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>display an debugging message to the logger, if there is one.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>return a message or hash</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+29
+30
+31
+32
+33
+34</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 29</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@logger</span>
+    <span class='id identifier rubyid_json'>json</span> <span class='op'>=</span> <span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span> <span class='op'>||</span> <span class='kw'>yield</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_DEBUG</span><span class='rparen'>)</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_json'>json</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="error-instance_method">
+  
+    - (<tt>Object</tt>) <strong>error</strong>(msg) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>display an error message to the logger, if there is one.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 46</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+  <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_ERROR</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -595,16 +1017,91 @@ result.</p>
       <pre class="lines">
 
 
-15
-16
-17
-18</pre>
+53
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_failed'>failed</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
-  <span class='ivar'>@ok</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='ivar'>@result_code</span> <span class='op'>=</span> <span class='const'>RESULT_CODE_FAILED</span>
+  <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="failed_with_code-instance_method">
+  
+    - (<tt>Object</tt>) <strong>failed_with_code</strong>(msg, result_code) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Call this if your command implementation fails.  Sets ok? to false on the
+result.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>msg</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>message describing the failure.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>result_code</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+62
+63
+64
+65</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 62</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_failed_with_code'>failed_with_code</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='id identifier rubyid_result_code'>result_code</span><span class='rparen'>)</span>
+  <span class='ivar'>@result_code</span> <span class='op'>=</span> <span class='id identifier rubyid_result_code'>result_code</span>
   <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -615,7 +1112,7 @@ result.</p>
       <div class="method_details ">
   <h3 class="signature " id="info-instance_method">
   
-    - (<tt>Object</tt>) <strong>info</strong>(msg) 
+    - (<tt>Object</tt>) <strong>info</strong>(msg = nil) { ... }
   
 
   
@@ -631,6 +1128,24 @@ result.</p>
 </div>
 <div class="tags">
   
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>return a message or hash</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -638,15 +1153,21 @@ result.</p>
       <pre class="lines">
 
 
-64
-65
-66</pre>
+38
+39
+40
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 38</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
-  <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@logger</span>
+    <span class='id identifier rubyid_json'>json</span> <span class='op'>=</span> <span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span> <span class='op'>||</span> <span class='kw'>yield</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_INFO</span><span class='rparen'>)</span>
+    <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span><span class='lparen'>(</span><span class='id identifier rubyid_json'>json</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -692,15 +1213,215 @@ result.</p>
       <pre class="lines">
 
 
-54
-55
-56</pre>
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_current'>current</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="log_input-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log_input</strong>(params) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Used internally to log the input parameters to a command</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+121
+122
+123
+124
+125</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 121</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_log_input'>log_input</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='ivar'>@logger</span>
+  <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_reject'>reject</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid__v'>_v</span><span class='op'>|</span> <span class='id identifier rubyid_internal_key?'>internal_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_log_info_hash'>log_info_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_COMMAND_INPUT</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="log_output-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log_output</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Used internally to log the output parameters for a command.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+128
+129
+130
+131
+132
+133
+134</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 128</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_log_output'>log_output</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='ivar'>@logger</span>
+  <span class='comment'># only log the first level parameters, subcommands will log
+</span>  <span class='comment'># their own output.
+</span>  <span class='id identifier rubyid_output'>output</span> <span class='op'>=</span> <span class='id identifier rubyid_current'>current</span><span class='period'>.</span><span class='id identifier rubyid_reject'>reject</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_internal_key?'>internal_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_log_info_hash'>log_info_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_output'>output</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_COMMAND_OUTPUT</span><span class='rparen'>)</span> 
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="logger=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>logger=</strong>(logger) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>set the logger for this result</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+15
+16
+17
+18
+19
+20</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 15</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_logger='>logger=</span><span class='lparen'>(</span><span class='id identifier rubyid_logger'>logger</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_logger'>logger</span>
+  <span class='ivar'>@sequence</span> <span class='op'>=</span> <span class='const'>SecureRandom</span><span class='period'>.</span><span class='id identifier rubyid_hex'>hex</span> 
+  <span class='ivar'>@stack</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span> 
+  <span class='ivar'>@logger</span> <span class='op'>=</span> <span class='id identifier rubyid_logger'>logger</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="logging?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>logging?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns true if logging is enabled.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>true if logging is enabled.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 23</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_logging?'>logging?</span>
+  <span class='kw'>return</span> <span class='op'>!</span><span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -751,15 +1472,15 @@ result.</p>
       <pre class="lines">
 
 
-21
-22
-23</pre>
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ok?'>ok?</span>
-  <span class='kw'>return</span> <span class='ivar'>@ok</span>
+  <span class='kw'>return</span> <span class='ivar'>@result_code</span> <span class='op'>==</span> <span class='const'>RESULT_CODE_OK</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -792,17 +1513,19 @@ result.</p>
       <pre class="lines">
 
 
-38
-39
-40
-41</pre>
+89
+90
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 89</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_pop'>pop</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_key'>key</span>
   <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span>
+  <span class='ivar'>@stack</span><span class='period'>.</span><span class='id identifier rubyid_pop'>pop</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -812,7 +1535,7 @@ result.</p>
       <div class="method_details ">
   <h3 class="signature " id="push-instance_method">
   
-    - (<tt>Object</tt>) <strong>push</strong>(key) 
+    - (<tt>Object</tt>) <strong>push</strong>(key, cmd) 
   
 
   
@@ -835,21 +1558,22 @@ result.</p>
       <pre class="lines">
 
 
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35</pre>
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 76</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_key'>key</span>
   <span class='id identifier rubyid_old_cur'>old_cur</span> <span class='op'>=</span> <span class='id identifier rubyid_current'>current</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_old_cur'>old_cur</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
@@ -858,6 +1582,89 @@ result.</p>
     <span class='ivar'>@values</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
     <span class='id identifier rubyid_old_cur'>old_cur</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@values</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
   <span class='kw'>end</span>
+  <span class='ivar'>@stack</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span> <span class='label'>key:</span> <span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='label'>cmd:</span> <span class='id identifier rubyid_cmd'>cmd</span> <span class='rbrace'>}</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="root_command-instance_method">
+  
+    - (<tt>Object</tt>) <strong>root_command</strong>(cls) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Used internally to establish the class of the root command</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+137
+138
+139</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 137</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_root_command'>root_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='rparen'>)</span>
+  <span class='ivar'>@stack</span> <span class='op'>&lt;&lt;</span> <span class='lbrace'>{</span> <span class='label'>key:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>cmd:</span> <span class='id identifier rubyid_cls'>cls</span> <span class='rbrace'>}</span>  <span class='kw'>if</span> <span class='ivar'>@logger</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sequence-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sequence</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>return the unique sequence id for the commands under this result</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+106
+107
+108</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 106</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sequence'>sequence</span>
+  <span class='kw'>return</span> <span class='ivar'>@sequence</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -869,7 +1676,7 @@ result.</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Mar  4 10:20:15 2016 by
+  Generated on Mon Mar  7 11:53:02 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

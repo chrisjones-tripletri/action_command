@@ -126,6 +126,11 @@ module ActionCommand
       insert_io(@input, sym, desc, opts)
     end
     
+    # Defines output for a command
+    # @param sym [Symbol] symbol identifying the parameter
+    # @param desc [String] description for use by internal developers, or on a rake task with 
+    #   rake your_task_name[help]
+    # @param opts Optional arguments.
     def output(sym, desc, opts = {})
       insert_io(@output, sym, desc, opts)
     end

@@ -160,6 +160,68 @@ you should call additional actions via:
   end
 ```
 
+### Error Handling and Logging
+
+#### Error Handling
+
+Within a command, you can generically fail with an error message, or fail with a
+particular custom error code
+
+```ruby
+  def execute_internal(result)
+    # fail generically
+    result.failed("Something bad happened")
+  
+    my_custom_error = 10
+    result.failed_with_code("Something bad happened", my_custom_error)
+  end
+```
+
+You can check for errors in the result:
+
+```ruby
+  result = ActionCommand.execute_rails...
+  
+  return unless result.ok? # generic failure
+  
+  switch(result.result_code)
+  when ActionCommand::RESULT_CODE_OK
+    ...
+  when my_custom_error
+    ...
+  end
+```
+
+#### Logging
+
+You can turn on logging either globally, or for specific
+command executions:
+
+```ruby
+  # turn it on globally
+  ActionCommand.logger = your_logger
+  
+  # turn it on only for this command
+  params = { 
+    logger: your_logger,
+    # your other parameters
+  }
+  ActionCommand.execute_rails(YourCommand, params)
+```
+
+When logging is on, the logger will receive single-line JSON messages
+at the debugging level for all command inputs and outputs.  All child
+commands under a parent will automatically be tagged with a serial
+number for correlation.  The result looks like this:
+
+TODO
+
+You can also optionally add your own entries to the log by calling
+`result.debug`, `result.info`, or `result.failed`.   If you pass these
+calls a string, they will include it as `msg` in the JSON.   If you
+pass them a hash, its contents will be merged into the JSON.
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

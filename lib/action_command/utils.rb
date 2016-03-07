@@ -15,11 +15,6 @@ module ActionCommand
       return cls.find(item) if item.is_a? Integer
       return yield(item)
     end
-    
-    
-     
-    
-    
   end
   
 end

@@ -1,8 +1,12 @@
 AllCops:
   Exclude:
     - Guardfile
+    - spec/**/*
 Metrics/LineLength:
   Max: 99
+
+Metrics/MethodLength:
+  Max: 15
 
 Style/TrailingWhitespace:
   Enabled: false

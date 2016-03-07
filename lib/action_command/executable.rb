@@ -34,6 +34,12 @@ module ActionCommand
     def rake_context?
       return root_context == ActionCommand::CONTEXT_RAKE
     end
+    
+    # @return true if this command was executed using ActionCommand.execute_api
+    def api_context?
+      return root_context == ActionCommand::CONTEXT_API
+    end
+    
 
     # @return true if this command is a child of another command
     def child_context?

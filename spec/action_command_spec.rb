@@ -1,12 +1,14 @@
 require 'spec_helper'
 require 'open3'
-require_relative './mocks/mock_logger'
+require 'stringio'
 require_relative './mocks/mock_active_record'
 require_relative './test_actions/hello_world_command'
 require_relative './test_actions/greet_group_command'
 require_relative './test_actions/failing_command'
+require_relative './test_actions/fail_with_result_command'
 require_relative './test_actions/internal_test_command'
 require_relative './test_actions/no_parameters_command'
+require_relative './test_actions/parent_with_logging_command'
 
 describe ActionCommand do
   
@@ -52,12 +54,8 @@ describe ActionCommand do
   end
   
   it 'handles a failing command' do
-    mock_logger = MockLogger.new
-    ActionCommand.logger = mock_logger
     result = ActionCommand.execute_test(self, FailingCommand)
     expect(result).not_to be_ok
-    expect(mock_logger.last_info).to eq(FailingCommand::INFO_MSG)
-    expect(mock_logger.last_error).to eq(FailingCommand::ERROR_MSG)
   end
   
   it 'allows testing inside commands' do
@@ -116,5 +114,89 @@ describe ActionCommand do
     expect(stdout).to include('help: Help for')
     expect(stdout).to include('test: Test value')
   end
+  
+  it 'handles failure with result code' do
+    result = ActionCommand.execute_test(self, FailWithResultCommand)
+    expect(result).not_to be_ok
+    expect(result.result_code).to eq(FailWithResultCommand::CUSTOM_RESULT_CODE)
+  end
+
+  def validate_context(rspec, result, api, rails, rake, test, child)
+    expect(result).to be_ok
+    first = result[0]
+    validate_context_result(rspec, first, api, rails, rake, test, child)
+  end
+  
+  def validate_context_result(rspec, first, api, rails, rake, test, child)
+    rspec.expect(first[:context_api]).to rspec.be api
+    rspec.expect(first[:context_rails]).to rspec.be rails
+    rspec.expect(first[:context_rake]).to rspec.be rake
+    rspec.expect(first[:context_test]).to rspec.be test
+    rspec.expect(first[:context_child]).to rspec.be child
+  end
+    
+  it 'knows its context' do
+    names = { names: %w(thing1 thing2) }
+    result = ActionCommand.execute_api(GreetGroupCommand, names)
+    validate_context(self, result, true, false, false, false, true)
+
+    result = ActionCommand.execute_rails(GreetGroupCommand, names)
+    validate_context(self, result, false, true, false, false, true)
+
+    result = ActionCommand.execute_rake(GreetGroupCommand, names)
+    validate_context(self, result, false, false, true, false, true)
+
+    result = ActionCommand.execute_test(self, GreetGroupCommand, names)
+    validate_context(self, result, false, false, false, true, true)
+
+    result = ActionCommand.execute_test(self, HelloWorldCommand, name: 'Chris')
+    validate_context_result(self, result, false, false, false, true, false)
+  end    
+  
+  def validate_log_message(r, log, item, sequence, cmd, kind, msg, key = nil)
+    r.expect(log.next(item)).to r.be true
+    r.expect(item.sequence).to r.eq(sequence)
+    r.expect(item.command?(cmd)).to r.be true
+    r.expect(item.kind?(kind)).to r.be true
+    r.expect(item.match_message?(msg)).to r.be true
+    r.expect(item.key?(key)).to r.be true if key
+  end
+  
+  it 'logs from within command', focus: true do
+    strio  = StringIO.new
+    logger = Logger.new(strio)
+    result = ActionCommand.execute_test(self, ParentWithLoggingCommand, test_in: 'Hello', logger: logger)
+    # puts strio.string
+    
+    strio.seek(0)
+    msg = ActionCommand::LogMessage.new
+    log = ActionCommand::LogParser.new(strio)
+    seq = result.sequence
+
+    validate_log_message(self, log, msg, seq, ParentWithLoggingCommand, ActionCommand::LOG_KIND_COMMAND_INPUT, test_in: 'Hello')
+    validate_log_message(self, log, msg, seq, ParentWithLoggingCommand, ActionCommand::LOG_KIND_INFO, ParentWithLoggingCommand::TEST_INFO_STRING)
+    validate_log_message(self, log, msg, seq, ParentWithLoggingCommand, ActionCommand::LOG_KIND_DEBUG, ParentWithLoggingCommand::TEST_DEBUG_STRING)
+    validate_log_message(self, log, msg, seq, HelloWorldCommand, ActionCommand::LOG_KIND_COMMAND_INPUT, { name: 'Chris' }, 1)
+    validate_log_message(self, log, msg, seq, HelloWorldCommand, ActionCommand::LOG_KIND_INFO, 'Hello Chris', 1)
+    validate_log_message(self, log, msg, seq, HelloWorldCommand, ActionCommand::LOG_KIND_COMMAND_OUTPUT, {
+                           greeting: 'Hello Chris',
+                           context_api: false,
+                           context_test: true,
+                           context_child: true
+                         }, 1)
+    validate_log_message(self, log, msg, seq, ParentWithLoggingCommand, ActionCommand::LOG_KIND_COMMAND_OUTPUT, test_out: ParentWithLoggingCommand::TEST_OUTPUT)
+    
+    # go back to the end, and pretty print it.
+    strio.seek(0)
+    strpretty = StringIO.new
+    result = ActionCommand.execute_test(self, ActionCommand::PrettyPrintLogAction, source: strio, dest: strpretty)
+    pretty = strpretty.string
+    # puts pretty
+    expect(pretty).to include('ParentWithLoggingCommand')
+    expect(pretty).to include('HelloWorldCommand')
+    expect(pretty).to include('greeting: Hello Chris')
+    expect(pretty).to include('name: Chris')
+  end
+    
   
 end

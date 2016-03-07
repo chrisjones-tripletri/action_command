@@ -3,6 +3,8 @@ require 'action_command/result'
 require 'action_command/input_output'
 require 'action_command/executable'
 require 'action_command/utils'
+require 'action_command/log_parser'
+require 'action_command/pretty_print_log_action'
 
 # To use action command, create subclasses of ActionCommand::Executable
 # and run them using the ActionCommand.execute_... variants.
@@ -18,6 +20,32 @@ module ActionCommand
   # Used as root parent of command if we are executing it from rails (a controller, etc)
   CONTEXT_RAILS = :rails
   
+  # Used as a root element when the command is executed from an API context
+  CONTEXT_API = :api
+  
+  # Used if a result has had no failures
+  RESULT_CODE_OK = 0
+  
+  # Used as a generic result code for failure, if you do not provide
+  # a more specific one through {ActionCommand::Result#failed_with_code}
+  RESULT_CODE_FAILED = 1
+  
+  # log entry for the input to a commmand
+  LOG_KIND_COMMAND_INPUT   = :command_input
+  
+  # log entry for the output from a command
+  LOG_KIND_COMMAND_OUTPUT  = :command_output
+  
+  # info message from within a command
+  LOG_KIND_INFO            = :info
+
+  # debug message from within a command
+  LOG_KIND_DEBUG           = :debug
+  
+  # error message from within a command
+  LOG_KIND_ERROR           = :error
+  
+  
   # Used to create an optional parameter in describe_io
   OPTIONAL = { optional: true }.freeze
 
@@ -32,7 +60,7 @@ module ActionCommand
   
   # @return a new, valid, empty result.
   def self.create_result
-    return ActionCommand::Result.new(@@logger)
+    return ActionCommand::Result.new
   end
 
   # Execute a command at the root level of a testing context
@@ -83,6 +111,15 @@ module ActionCommand
     return ActionCommand.create_and_execute(cls, params, CONTEXT_RAILS, result)
   end
   
+  # Execute a command at the root level of an api context
+  # @param cls [ActionCommand::Executable] The class of an Executable subclass
+  # @param params [Hash] parameters used by the command.
+  # @return [ActionCommand::Result]
+  def self.execute_api(cls, params = {})
+    result = create_result
+    return ActionCommand.create_and_execute(cls, params, CONTEXT_API, result)
+  end
+  
   # Execute a child command, placing its results under the specified subkey
   # @param parent [ActionCommand::Executable] An instance of the parent command
   # @param cls [ActionCommand::Executable] The class of an Executable subclass
@@ -92,7 +129,7 @@ module ActionCommand
   # @param params [Hash] parameters used by the command.
   # @return [ActionCommand::Result]
   def self.execute_child(parent, cls, result, result_key, params = {})
-    result.push(result_key)
+    result.push(result_key, cls)
     ActionCommand.create_and_execute(cls, params, parent, result)
     result.pop(result_key)
     return result
@@ -115,14 +152,24 @@ module ActionCommand
 
   # Used internally, not for general purpose use.
   def self.create_and_execute(cls, params, parent, result)
+    check_params(cls, params)
+    params[:parent] = parent
+    result.logger = params[:logger] 
+    result.logger = @@logger unless params[:logger]
+    result.root_command(cls) if parent.is_a? Symbol
+    action = cls.new(params)
+    
+    result.log_input(params)
+    action.execute(result)
+    result.log_output   
+    return result
+  end
+  
+  def self.check_params(cls, params)
     raise ArgumentError, 'Expected params to be a Hash' unless params.is_a? Hash
     
     unless cls.is_a?(Class) && cls.ancestors.include?(ActionCommand::Executable)
       raise ArgumentError, 'Expected an ActionCommand::Executable as class'
     end
-    
-    params[:parent] = parent
-    action = cls.new(params)
-    return action.execute(result)
   end
 end
