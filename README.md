@@ -210,17 +210,62 @@ command executions:
 ```
 
 When logging is on, the logger will receive single-line JSON messages
-at the debugging level for all command inputs and outputs.  All child
+at the info level for all command inputs and outputs.  All child
 commands under a parent will automatically be tagged with a serial
 number for correlation.  The result looks like this:
 
-TODO
+```
+I, [2016-03-07T14:31:53.292843 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"command_input","msg":{"name":"Chris","email":"test@test.com","age":41}}
+I, [2016-03-07T14:31:53.293007 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"info","msg":"start_transaction"}
+I, [2016-03-07T14:31:53.308212 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"info","msg":"Saved user"}
+I, [2016-03-07T14:31:53.308336 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"command_input","msg":{}}
+I, [2016-03-07T14:31:53.308442 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"info","msg":"in child transaction"}
+I, [2016-03-07T14:31:53.308504 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"command_output","msg":{}}
+I, [2016-03-07T14:31:53.308562 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"info","msg":"end_transaction"}
+I, [2016-03-07T14:31:53.308837 #47956]  INFO -- : {"sequence":"ade3605e40a4d5bf724c5f3d8e43420b","cmd":"CreateUserAction","depth":0,"kind":"command_output","msg":{"user":{"email":"test@test.com","name":"Chris","age":41}}}
+```
 
 You can also optionally add your own entries to the log by calling
-`result.debug`, `result.info`, or `result.failed`.   If you pass these
-calls a string, they will include it as `msg` in the JSON.   If you
-pass them a hash, its contents will be merged into the JSON.
+`result.debug`, `result.info`, or `result.failed`.   You can pass these calls
+a string or a hash.
 
+You can use the included LogParser to parse this log if you like, or you can
+use the included PrettyPrintLogAction to print the log in a nested plain text
+format, like:
+
+```
+  HelloWorldCommand (8d315fe58dab39cb4f23a9f4ef366c8b)
+    input:
+      name: Chris
+    Hello Chris
+  output:
+    greeting: Hello Chris
+```
+
+### ActiveRecord Transactions
+
+You can wrap your command contents in a transaction by subclassing
+`ActionCommand::ExecutableTransaction`.  You must explicitly require
+`action_command/executable_transaction` to avoid a default dependency
+on ActiveRecord.
+
+If you call `result.failed` within a transaction, your transaction will
+automatically be rolled back.
+
+### Utilities
+
+It is often useful to allow a single parameter to be either an integer object id,
+an instance of the object itself, or a string used to lookup the object (used
+in command-line rake tasks).   You can do this using
+
+```ruby
+  def execute_internal(result)
+    user = ActionCommand::Utils.find_object(User, @user_id) { |p| User.find_by_email(p) }
+  end
+```
+
+This will user User.find if passed an Integer, will return a user object, or will yield
+to the lookup otherwise.
 
 ## Development
 

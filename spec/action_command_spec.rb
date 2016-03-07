@@ -193,7 +193,7 @@ describe ActionCommand do
     strpretty = StringIO.new
     result = ActionCommand.execute_test(self, ActionCommand::PrettyPrintLogAction, source: strio, dest: strpretty)
     pretty = strpretty.string
-    # puts pretty
+    puts pretty
     expect(pretty).to include('ParentWithLoggingCommand')
     expect(pretty).to include('HelloWorldCommand')
     expect(pretty).to include('greeting: Hello Chris')
