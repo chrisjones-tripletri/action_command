@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.11'
+  spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.37.0'
@@ -33,4 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'terminal-notifier'
   spec.add_development_dependency 'terminal-notifier-guard'
   spec.add_development_dependency 'rake_command_filter'
+  spec.add_development_dependency 'activerecord', '~> 4.0.0'
+  spec.add_development_dependency 'sqlite3'
 end

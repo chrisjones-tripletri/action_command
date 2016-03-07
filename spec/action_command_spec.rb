@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'open3'
 require 'stringio'
+require 'byebug'
 require_relative './mocks/mock_active_record'
 require_relative './test_actions/hello_world_command'
 require_relative './test_actions/greet_group_command'
@@ -9,6 +10,7 @@ require_relative './test_actions/fail_with_result_command'
 require_relative './test_actions/internal_test_command'
 require_relative './test_actions/no_parameters_command'
 require_relative './test_actions/parent_with_logging_command'
+require_relative './test_actions/create_user_action'
 
 describe ActionCommand do
   
@@ -162,7 +164,7 @@ describe ActionCommand do
     r.expect(item.key?(key)).to r.be true if key
   end
   
-  it 'logs from within command', focus: true do
+  it 'logs from within command' do
     strio  = StringIO.new
     logger = Logger.new(strio)
     result = ActionCommand.execute_test(self, ParentWithLoggingCommand, test_in: 'Hello', logger: logger)
@@ -197,6 +199,31 @@ describe ActionCommand do
     expect(pretty).to include('greeting: Hello Chris')
     expect(pretty).to include('name: Chris')
   end
-    
   
+  it 'commits a successful transaction' do
+    email = 'test@test.com'
+    strio  = StringIO.new
+    logger = Logger.new(strio)
+    result = ActionCommand.execute_test(self, CreateUserAction, name: 'Chris', email: email, age: 41, logger: logger)
+    expect(result).to be_ok
+    created = result[:user]
+    puts strio.string
+    
+    user = User.find_by_email(email)
+    expect(user).not_to be_nil
+    expect(user.id).to eq(created.id)
+    expect(user.email).to eq(email)
+  end
+  
+  it 'rolls back a failed transaction' do
+    email = 'test2@test.com'
+    strio  = StringIO.new
+    logger = Logger.new(strio)
+    result = ActionCommand.execute_test(self, CreateUserAction, name: 'Chris', email: email, age: 150, logger: logger)
+    expect(result).not_to be_ok
+    
+    user = User.find_by_email(email)
+    expect(user).to be_nil
+    
+  end
 end

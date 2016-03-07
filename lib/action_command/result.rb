@@ -44,7 +44,7 @@ module ActionCommand
   
     # display an error message to the logger, if there is one.
     def error(msg)
-      @logger.error(build_log(msg), ActionCommand::LOG_KIND_ERROR) if @logger
+      @logger.error(build_log(msg, ActionCommand::LOG_KIND_ERROR)) if @logger
     end
   
     # Call this if your command implementation fails.  Sets

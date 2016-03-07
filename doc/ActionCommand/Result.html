@@ -963,7 +963,7 @@
       <pre class="code"><span class="info file"># File 'lib/action_command/result.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
-  <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_ERROR</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
+  <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_build_log'>build_log</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='comma'>,</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>LOG_KIND_ERROR</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@logger</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1676,7 +1676,7 @@ result.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon Mar  7 11:53:02 2016 by
+  Generated on Mon Mar  7 14:27:17 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>
