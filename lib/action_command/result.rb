@@ -7,6 +7,7 @@ module ActionCommand
     # By default, a command is ok?
     def initialize
       @result_code = RESULT_CODE_OK
+      @last_error  = nil
       @values = [{}]
       @logger = nil
     end
@@ -52,6 +53,7 @@ module ActionCommand
     # @param msg [String] message describing the failure.
     def failed(msg)
       @result_code = RESULT_CODE_FAILED
+      @last_error  = msg
       error(msg)
     end
     
@@ -61,6 +63,7 @@ module ActionCommand
     # @param result_code [Integer]
     def failed_with_code(msg, result_code)
       @result_code = result_code
+      @last_error = msg
       error(msg)
     end
   
@@ -71,6 +74,9 @@ module ActionCommand
     
     # @return [Integer] the current result code
     attr_reader :result_code
+    
+    # @return [String] the last string error message
+    attr_reader :last_error
     
     # adds results under the subkey until pop is called
     def push(key, cmd)

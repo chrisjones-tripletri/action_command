@@ -270,17 +270,57 @@ executions:</p>
 </code></pre>
 
 <p>When logging is on, the logger will receive single-line JSON messages at
-the debugging level for all command inputs and outputs. All child commands
-under a parent will automatically be tagged with a serial number for
-correlation. The result looks like this:</p>
+the info level for all command inputs and outputs. All child commands under
+a parent will automatically be tagged with a serial number for correlation.
+The result looks like this:</p>
 
-<p>TODO</p>
+<pre class="code ruby"><code class="ruby">I, [2016-03-07T14:31:53.292843 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;command_input&quot;,&quot;msg&quot;:{&quot;name&quot;:&quot;Chris&quot;,&quot;email&quot;:&quot;test@test.com&quot;,&quot;age&quot;:41}}
+I, [2016-03-07T14:31:53.293007 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;info&quot;,&quot;msg&quot;:&quot;start_transaction&quot;}
+I, [2016-03-07T14:31:53.308212 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;info&quot;,&quot;msg&quot;:&quot;Saved user&quot;}
+I, [2016-03-07T14:31:53.308336 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;command_input&quot;,&quot;msg&quot;:{}}
+I, [2016-03-07T14:31:53.308442 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;info&quot;,&quot;msg&quot;:&quot;in child transaction&quot;}
+I, [2016-03-07T14:31:53.308504 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;command_output&quot;,&quot;msg&quot;:{}}
+I, [2016-03-07T14:31:53.308562 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;info&quot;,&quot;msg&quot;:&quot;end_transaction&quot;}
+I, [2016-03-07T14:31:53.308837 #47956]  INFO -- : {&quot;sequence&quot;:&quot;ade3605e40a4d5bf724c5f3d8e43420b&quot;,&quot;cmd&quot;:&quot;CreateUserAction&quot;,&quot;depth&quot;:0,&quot;kind&quot;:&quot;command_output&quot;,&quot;msg&quot;:{&quot;user&quot;:{&quot;email&quot;:&quot;test@test.com&quot;,&quot;name&quot;:&quot;Chris&quot;,&quot;age&quot;:41}}}</code></pre>
 
 <p>You can also optionally add your own entries to the log by calling
 <code>result.debug</code>, <code>result.info</code>, or
-<code>result.failed</code>. If you pass these calls a string, they will
-include it as <code>msg</code> in the JSON. If you pass them a hash, its
-contents will be merged into the JSON.</p>
+<code>result.failed</code>. You can pass these calls a string or a hash.</p>
+
+<p>You can use the included LogParser to parse this log if you like, or you
+can use the included PrettyPrintLogAction to print the log in a nested
+plain text format, like:</p>
+
+<pre class="code ruby"><code class="ruby">HelloWorldCommand (8d315fe58dab39cb4f23a9f4ef366c8b)
+    input:
+      name: Chris
+    Hello Chris
+  output:
+    greeting: Hello Chris</code></pre>
+
+<h3 id="label-ActiveRecord+Transactions">ActiveRecord Transactions</h3>
+
+<p>You can wrap your command contents in a transaction by subclassing
+<code>ActionCommand::ExecutableTransaction</code>. You must explicitly
+require <code>action_command/executable_transaction</code> to avoid a
+default dependency on ActiveRecord.</p>
+
+<p>If you call <code>result.failed</code> within a transaction, your
+transaction will automatically be rolled back.</p>
+
+<h3 id="label-Utilities">Utilities</h3>
+
+<p>It is often useful to allow a single parameter to be either an integer
+object id, an instance of the object itself, or a string used to lookup the
+object (used in command-line rake tasks). You can do this using</p>
+
+<pre class="code ruby"><code class="ruby"><span class='kw'>def</span> <span class='id identifier rubyid_execute_internal'>execute_internal</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_user'>user</span> <span class='op'>=</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>Utils</span><span class='period'>.</span><span class='id identifier rubyid_find_object'>find_object</span><span class='lparen'>(</span><span class='const'>User</span><span class='comma'>,</span> <span class='ivar'>@user_id</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_find_by_email'>find_by_email</span><span class='lparen'>(</span><span class='id identifier rubyid_p'>p</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+</code></pre>
+
+<p>This will user User.find if passed an Integer, will return a user object,
+or will yield to the lookup otherwise.</p>
 
 <h2 id="label-Development">Development</h2>
 
@@ -312,7 +352,7 @@ href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Mon Mar  7 14:27:16 2016 by
+  Generated on Mon May 16 08:49:38 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

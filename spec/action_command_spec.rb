@@ -121,6 +121,7 @@ describe ActionCommand do
     result = ActionCommand.execute_test(self, FailWithResultCommand)
     expect(result).not_to be_ok
     expect(result.result_code).to eq(FailWithResultCommand::CUSTOM_RESULT_CODE)
+    expect(result.last_error).to eq(FailWithResultCommand::ERROR_MSG)
   end
 
   def validate_context(rspec, result, api, rails, rake, test, child)
