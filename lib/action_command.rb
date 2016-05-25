@@ -89,9 +89,6 @@ module ActionCommand
       return
     end
     
-    # by default, use human logging if a logger is enabled.
-    args[:logger] = Logger.new(STDOUT) unless args.key?(:logger)
-    args[:log_format] = :human unless args.key?(:log_format)
     
     result = create_result
     ActionCommand.create_and_execute(cls, io.rake_input(args), CONTEXT_RAKE, result)

@@ -87,6 +87,10 @@ module ActionCommand
       rake_arg.each do |key, val| 
         params[key] = val
       end
+      # by default, use human logging if a logger is enabled.
+      params[:logger] = Logger.new(STDOUT) unless params.key?(:logger)
+      params[:log_format] = :human unless params.key?(:log_format)
+      
       return params
     end
     
