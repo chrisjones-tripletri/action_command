@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'open3'
 require 'stringio'
 require 'byebug'
+require 'logger'
 require_relative './mocks/mock_active_record'
 require_relative './test_actions/hello_world_command'
 require_relative './test_actions/greet_group_command'
@@ -199,6 +200,13 @@ describe ActionCommand do
     expect(pretty).to include('HelloWorldCommand')
     expect(pretty).to include('greeting: Hello Chris')
     expect(pretty).to include('name: Chris')
+  end
+  
+  it 'human logging for nested command' do
+    strio  = StringIO.new
+    logger = Logger.new(strio)
+    result = ActionCommand.execute_test(self, ParentWithLoggingCommand, test_in: 'Hello', logger: logger, log_format: :human)
+    puts strio.string
   end
   
   it 'commits a successful transaction' do

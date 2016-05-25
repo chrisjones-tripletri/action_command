@@ -13,11 +13,12 @@ module ActionCommand
     end
     
     # set the logger for this result
-    def logger=(logger)
+    def configure_logger(logger, format)
       return unless logger
       @sequence = SecureRandom.hex 
       @stack = [] 
       @logger = logger
+      @log_format = format
     end
 
     # @return true if logging is enabled.
@@ -29,8 +30,8 @@ module ActionCommand
     # @yield return a message or hash
     def debug(msg = nil)
       if @logger
-        json = build_log(msg || yield, ActionCommand::LOG_KIND_DEBUG)
-        @logger.info(json)
+        msg = build_log(msg || yield, ActionCommand::LOG_KIND_DEBUG)
+        @logger.info(format_log(msg))
       end
     end
   
@@ -38,14 +39,17 @@ module ActionCommand
     # @yield return a message or hash
     def info(msg = nil)
       if @logger
-        json = build_log(msg || yield, ActionCommand::LOG_KIND_INFO)
-        @logger.info(json)
+        msg = build_log(msg || yield, ActionCommand::LOG_KIND_INFO)
+        @logger.info(format_log(msg))
       end
     end
   
     # display an error message to the logger, if there is one.
     def error(msg)
-      @logger.error(build_log(msg, ActionCommand::LOG_KIND_ERROR)) if @logger
+      if @logger
+        msg = build_log(msg, ActionCommand::LOG_KIND_ERROR)
+        @logger.error(format_log(msg))
+      end
     end
   
     # Call this if your command implementation fails.  Sets
@@ -153,7 +157,8 @@ module ActionCommand
 
     def log_info_hash(params, kind)
       return unless @logger
-      @logger.info(build_log(params, kind))
+      msg = build_log(params, kind)
+      @logger.info(format_log(msg))
     end
     
     def build_log(msg, kind)
@@ -166,7 +171,31 @@ module ActionCommand
       out[:key] = cur[:key] if cur[:key]
       out[:kind] = kind
       out[:msg] = msg if msg
-      return JSON.generate(out)
+      return out
+    end
+    
+    def format_log(msg)
+      return JSON.generate(msg) unless @log_format == :human
+
+      depth = msg[:depth]
+      kind = msg[:kind]
+      message = msg[:msg]
+      cmd = msg[:cmd]
+      return format_human_log(depth, cmd, kind, message)
+    end
+    
+    def format_human_log(depth, cmd, kind, msg)
+      base_depth = 2 * depth
+      extra_depth = base_depth + 2
+      if kind == ActionCommand::LOG_KIND_COMMAND_INPUT
+        cmd = "#{cmd}: #{msg}"
+        return cmd.rjust(cmd.length + base_depth)
+      elsif kind == ActionCommand::LOG_KIND_COMMAND_OUTPUT
+        out = "output: #{msg}"
+        return out.rjust(out.length + extra_depth)
+      elsif msg
+        return msg.rjust(msg.to_s.length + extra_depth)
+      end
     end
   end
 end

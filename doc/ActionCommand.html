@@ -320,7 +320,7 @@ specific one through <span class='object_link'><a href="ActionCommand/Result.htm
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.1.5</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.1.6</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
         <dt id="logger-classvariable" class="">@@logger =
           <div class="docstring">
@@ -679,16 +679,16 @@ specific one through <span class='object_link'><a href="ActionCommand/Result.htm
       <pre class="lines">
 
 
-168
-169
-170
-171
-172
-173
-174</pre>
+176
+177
+178
+179
+180
+181
+182</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 176</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_check_params'>check_params</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Expected params to be a Hash</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
@@ -728,11 +728,6 @@ specific one through <span class='object_link'><a href="ActionCommand/Result.htm
       <pre class="lines">
 
 
-154
-155
-156
-157
-158
 159
 160
 161
@@ -740,16 +735,27 @@ specific one through <span class='object_link'><a href="ActionCommand/Result.htm
 163
 164
 165
-166</pre>
+166
+167
+168
+169
+170
+171
+172
+173
+174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 154</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 159</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_and_execute'>create_and_execute</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='comma'>,</span> <span class='id identifier rubyid_parent'>parent</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_check_params'>check_params</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:parent</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_parent'>parent</span>
-  <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_logger'>logger</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:logger</span><span class='rbracket'>]</span> 
-  <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_logger'>logger</span> <span class='op'>=</span> <span class='cvar'>@@logger</span> <span class='kw'>unless</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:logger</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_logger'>logger</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:logger</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_logger'>logger</span> <span class='op'>=</span> <span class='cvar'>@@logger</span> <span class='kw'>unless</span> <span class='id identifier rubyid_logger'>logger</span>
+  <span class='id identifier rubyid_log_format'>log_format</span> <span class='op'>=</span> <span class='symbol'>:json</span>
+  <span class='id identifier rubyid_log_format'>log_format</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:log_format</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:log_format</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_configure_logger'>configure_logger</span><span class='lparen'>(</span><span class='id identifier rubyid_logger'>logger</span><span class='comma'>,</span> <span class='id identifier rubyid_log_format'>log_format</span><span class='rparen'>)</span> 
   <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_root_command'>root_command</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_parent'>parent</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Symbol</span>
   <span class='id identifier rubyid_action'>action</span> <span class='op'>=</span> <span class='id identifier rubyid_cls'>cls</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
   
@@ -807,12 +813,12 @@ specific one through <span class='object_link'><a href="ActionCommand/Result.htm
       <pre class="lines">
 
 
-62
 63
-64</pre>
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create_result'>create_result</span>
   <span class='kw'>return</span> <span class='const'>ActionCommand</span><span class='op'>::</span><span class='const'>Result</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -850,20 +856,20 @@ self.describe_io method</p>
       <pre class="lines">
 
 
-141
-142
-143
-144
-145
 146
 147
 148
 149
 150
-151</pre>
+151
+152
+153
+154
+155
+156</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 146</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd_cls'>cmd_cls</span><span class='comma'>,</span> <span class='id identifier rubyid_desc'>desc</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_cmd_cls'>cmd_cls</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
@@ -958,13 +964,13 @@ self.describe_io method</p>
       <pre class="lines">
 
 
-118
-119
-120
-121</pre>
+123
+124
+125
+126</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 123</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_api'>execute_api</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_create_result'>create_result</span>
@@ -1101,15 +1107,15 @@ directly on the current results object.</p>
       <pre class="lines">
 
 
-131
-132
-133
-134
-135
-136</pre>
+136
+137
+138
+139
+140
+141</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 131</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_child'>execute_child</span><span class='lparen'>(</span><span class='id identifier rubyid_parent'>parent</span><span class='comma'>,</span> <span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span><span class='comma'>,</span> <span class='id identifier rubyid_result_key'>result_key</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_result_key'>result_key</span><span class='comma'>,</span> <span class='id identifier rubyid_cls'>cls</span><span class='rparen'>)</span>
@@ -1199,13 +1205,13 @@ directly on the current results object.</p>
       <pre class="lines">
 
 
-109
-110
-111
-112</pre>
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 109</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 114</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_rails'>execute_rails</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_create_result'>create_result</span>
@@ -1291,7 +1297,6 @@ directly on the current results object.</p>
       <pre class="lines">
 
 
-84
 85
 86
 87
@@ -1302,10 +1307,15 @@ directly on the current results object.</p>
 92
 93
 94
-95</pre>
+95
+96
+97
+98
+99
+100</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_rake'>execute_rake</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_io'>io</span> <span class='op'>=</span> <span class='id identifier rubyid_cls'>cls</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span>
@@ -1313,6 +1323,10 @@ directly on the current results object.</p>
     <span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='id identifier rubyid_show_help'>show_help</span>
     <span class='kw'>return</span>
   <span class='kw'>end</span>
+  
+  <span class='comment'># by default, use human logging if a logger is enabled.
+</span>  <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='symbol'>:logger</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Logger</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>STDOUT</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:logger</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='symbol'>:log_format</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='symbol'>:human</span> <span class='kw'>unless</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:log_format</span><span class='rparen'>)</span>
   
   <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_create_result'>create_result</span>
   <span class='const'>ActionCommand</span><span class='period'>.</span><span class='id identifier rubyid_create_and_execute'>create_and_execute</span><span class='lparen'>(</span><span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='id identifier rubyid_rake_input'>rake_input</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>CONTEXT_RAKE</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
@@ -1418,14 +1432,14 @@ validations.  See <span class='object_link'><a href="ActionCommand/Executable.ht
       <pre class="lines">
 
 
-74
 75
 76
 77
-78</pre>
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 75</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_execute_test'>execute_test</span><span class='lparen'>(</span><span class='id identifier rubyid_rspec'>rspec</span><span class='comma'>,</span> <span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:test</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_rspec'>rspec</span>
@@ -1463,15 +1477,15 @@ validations.  See <span class='object_link'><a href="ActionCommand/Executable.ht
       <pre class="lines">
 
 
-98
-99
-100
-101
-102
-103</pre>
+103
+104
+105
+106
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 103</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_install_rake'>install_rake</span><span class='lparen'>(</span><span class='id identifier rubyid_rake'>rake</span><span class='comma'>,</span> <span class='id identifier rubyid_sym'>sym</span><span class='comma'>,</span> <span class='id identifier rubyid_cls'>cls</span><span class='comma'>,</span> <span class='id identifier rubyid_deps'>deps</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_rake'>rake</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='symbol'>:desc</span><span class='comma'>,</span> <span class='id identifier rubyid_cls'>cls</span><span class='period'>.</span><span class='id identifier rubyid_describe_io'>describe_io</span><span class='period'>.</span><span class='id identifier rubyid_desc'>desc</span><span class='rparen'>)</span>
@@ -1530,12 +1544,12 @@ validations.  See <span class='object_link'><a href="ActionCommand/Executable.ht
       <pre class="lines">
 
 
-57
 58
-59</pre>
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'lib/action_command.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_logger='>logger=</span><span class='lparen'>(</span><span class='id identifier rubyid_logger'>logger</span><span class='rparen'>)</span>
   <span class='cvar'>@@logger</span> <span class='op'>=</span> <span class='id identifier rubyid_logger'>logger</span> <span class='comment'># rubocop:disable Style/ClassVars
@@ -1550,7 +1564,7 @@ validations.  See <span class='object_link'><a href="ActionCommand/Executable.ht
 </div>
 
     <div id="footer">
-  Generated on Mon May 16 08:49:39 2016 by
+  Generated on Wed May 25 10:31:52 2016 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.2.3).
 </div>

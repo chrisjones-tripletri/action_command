@@ -1,3 +1,4 @@
+require 'logger'
 require 'action_command/version'
 require 'action_command/result'
 require 'action_command/input_output'
@@ -88,6 +89,10 @@ module ActionCommand
       return
     end
     
+    # by default, use human logging if a logger is enabled.
+    args[:logger] = Logger.new(STDOUT) unless args.key?(:logger)
+    args[:log_format] = :human unless args.key?(:log_format)
+    
     result = create_result
     ActionCommand.create_and_execute(cls, io.rake_input(args), CONTEXT_RAKE, result)
     io.print_output(result)
@@ -154,8 +159,11 @@ module ActionCommand
   def self.create_and_execute(cls, params, parent, result)
     check_params(cls, params)
     params[:parent] = parent
-    result.logger = params[:logger] 
-    result.logger = @@logger unless params[:logger]
+    logger = params[:logger]
+    logger = @@logger unless logger
+    log_format = :json
+    log_format = params[:log_format] if params.key?(:log_format)
+    result.configure_logger(logger, log_format) 
     result.root_command(cls) if parent.is_a? Symbol
     action = cls.new(params)
     
